@@ -1,7 +1,7 @@
 import type { Config } from 'tailwindcss';
 
 const config: Config = {
-  content: ['index.html', 'src/**/*.{vue,ts}'],
+  content: ['index.html', 'app/**/*.{vue,ts}'],
   important: '.opencor',
   theme: {
     extend: {}

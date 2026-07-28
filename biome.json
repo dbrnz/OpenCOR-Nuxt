@@ -65,7 +65,7 @@
       }
     },
     {
-      "includes": ["src/assets/logo.svg"],
+      "includes": ["app/assets/logo.svg"],
       "formatter": {
         "enabled": false
       },
