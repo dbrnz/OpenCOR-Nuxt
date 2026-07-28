@@ -23,5 +23,8 @@ logs
 .env.*
 !.env.example
 
+# Installed libopencor WASM files
+public/libopencor
+
 # Generated files
 app/components.d.ts

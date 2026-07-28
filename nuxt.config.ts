@@ -7,6 +7,7 @@ import { visualizer as visualizerPlugin } from 'rollup-plugin-visualizer';
 import vitePlugin from 'unplugin-vue-components/vite';
 import * as vite from 'vite';
 
+import { libopencorInstallPath } from './scripts/libopencor.install';
 import { libopencorVersion } from './scripts/libopencor.version';
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
@@ -75,7 +76,7 @@ export default defineNuxtConfig({
       target: 'esnext'
     },
     define: {
-      __LIBOPENCOR_WASM_BASE_URL__: JSON.stringify(`/libopencor/downloads/wasm/${libopencorVersion}`)
+      __LIBOPENCOR_WASM_BASE_URL__: JSON.stringify(`/${libopencorInstallPath}/${libopencorVersion}`)
     },
     plugins: [
       {
@@ -99,27 +100,6 @@ export default defineNuxtConfig({
         gzipSize: true
       })
     ],
-    server: {
-      fs: {
-        allow: [fileURLToPath(new URL('../..', import.meta.url))]
-      },
-      headers: {
-        'Cross-Origin-Opener-Policy': 'same-origin',
-        'Cross-Origin-Embedder-Policy': 'require-corp'
-      },
-      proxy: {
-        // See app/utils/initialisation.ts for the rationale behind this proxy.
-        '/libopencor/downloads/wasm': {
-          target: 'https://opencor.ws',
-          changeOrigin: true,
-          configure: (proxy) => {
-            proxy.on('proxyRes', (proxyRes) => {
-              proxyRes.headers['Cross-Origin-Embedder-Policy'] = 'require-corp';
-            });
-          }
-        }
-      }
-    },
     vue: {
       script: {
         fs: {
