@@ -1,3 +1,14 @@
+import * as primeVueAutoImportResolver from '@primevue/auto-import-resolver';
+import tailwindcssPlugin from '@tailwindcss/vite';
+
+import { fileURLToPath } from 'node:url';
+import * as nodeFs from 'node:fs';
+import { visualizer as visualizerPlugin } from 'rollup-plugin-visualizer';
+import vitePlugin from 'unplugin-vue-components/vite';
+import * as vite from 'vite';
+
+import { libopencorVersion } from './scripts/libopencor.version';
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   app: {
@@ -32,5 +43,92 @@ export default defineNuxtConfig({
     ],
   },
   compatibilityDate: '2025-07-15',
-  devtools: { enabled: true }
+  components: [
+    {
+      path: '~/components',
+      pathPrefix: false, // Disables folder name prefixing
+    }
+  ],
+  devtools: { enabled: true },
+  experimental: {
+    // This allows the compiler to properly handle TypeScript types in SFCs
+    typedPages: true
+  },
+  future: {
+    compatibilityVersion: 4, // Ensures strict Nuxt 4 directory conventions
+  },
+  sourcemap: {
+    server: true,
+    client: true,
+  },
+  ssr: false, // Forces client-only SPA behavior identical to plain Vue
+  vite: {
+    base: './',
+    build: {
+      chunkSizeWarningLimit: 2048,
+      rollupOptions: {
+        output: {
+          entryFileNames: `assets/[name].js`,
+          chunkFileNames: `assets/[name].js`,
+          assetFileNames: `assets/[name].[ext]`
+        }
+      },
+      target: 'esnext'
+    },
+    define: {
+      __LIBOPENCOR_WASM_BASE_URL__: JSON.stringify(`/libopencor/downloads/wasm/${libopencorVersion}`)
+    },
+    plugins: [
+      {
+        // Plugin to strip unneeded PrimeIcons files.
+
+        name: 'strip-unneeded-primeicons-files',
+        generateBundle(_options, bundle) {
+          for (const fileName of Object.keys(bundle)) {
+            if (fileName.includes('assets/primeicons') && /\.(eot|svg|ttf|woff)$/.test(fileName)) {
+              delete bundle[fileName];
+            }
+          }
+        }
+      },
+      tailwindcssPlugin(),
+      vitePlugin({
+        resolvers: [primeVueAutoImportResolver.PrimeVueResolver()]
+      }),
+      visualizerPlugin({
+        filename: 'dist/stats.html',
+        gzipSize: true
+      })
+    ],
+    server: {
+      fs: {
+        allow: [fileURLToPath(new URL('../..', import.meta.url))]
+      },
+      headers: {
+        'Cross-Origin-Opener-Policy': 'same-origin',
+        'Cross-Origin-Embedder-Policy': 'require-corp'
+      },
+      proxy: {
+        // See app/utils/initialisation.ts for the rationale behind this proxy.
+        '/libopencor/downloads/wasm': {
+          target: 'https://opencor.ws',
+          changeOrigin: true,
+          configure: (proxy) => {
+            proxy.on('proxyRes', (proxyRes) => {
+              proxyRes.headers['Cross-Origin-Embedder-Policy'] = 'require-corp';
+            });
+          }
+        }
+      }
+    },
+    vue: {
+      script: {
+        fs: {
+          fileExists: (file: string) => nodeFs.existsSync(file),
+          readFile: (file: string) => nodeFs.readFileSync(file, 'utf-8'),
+          realpath: (file: string) => nodeFs.realpathSync(file)
+        }
+      }
+    }
+  }
 })
