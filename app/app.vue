@@ -1,6 +1,8 @@
 <template>
   <div style="height: 100vh; height: 100dvh;">
-    <OpenCOR />
+    <ClientOnly>
+      <OpenCOR />
+    </ClientOnly>
   </div>
 </template>
 

@@ -61,7 +61,6 @@ export default defineNuxtConfig({
     server: true,
     client: true,
   },
-  ssr: false, // Forces client-only SPA behavior identical to plain Vue
   vite: {
     base: './',
     build: {
