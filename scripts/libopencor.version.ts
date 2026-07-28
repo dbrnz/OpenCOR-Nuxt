@@ -6,7 +6,6 @@ type RendererPackageJson = {
 };
 
 const resolvedPaths = [
-  path.resolve(process.cwd(), 'src/renderer/package.json'),
   path.join(import.meta.dirname, '..', 'package.json')
 ];
 const rendererPackageJsonPath = resolvedPaths.find((candidatePath) => {
