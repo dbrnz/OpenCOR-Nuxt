@@ -1,5 +1,5 @@
-import * as common from '../common/common';
-import * as dependencies from '../common/dependencies';
+import * as common from '../utils/common';
+import * as dependencies from '../utils/dependencies';
 
 import { EIssueType, type IIssue } from './locLoggerApi';
 

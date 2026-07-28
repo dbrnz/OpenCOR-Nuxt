@@ -13,12 +13,12 @@ import ContextMenu from 'primevue/contextmenu';
 import type { MenuItem } from 'primevue/menuitem';
 import * as vue from 'vue';
 
-import * as colors from '../../common/colors';
-import * as common from '../../common/common';
-import { LONG_DELAY, NO_DELAY, SHORT_DELAY } from '../../common/constants';
-import * as dependencies from '../../common/dependencies';
-import * as math from '../../common/math';
-import * as vueCommon from '../../common/vueCommon';
+import * as colors from '../../utils/colors';
+import * as common from '../../utils/common';
+import { LONG_DELAY, NO_DELAY, SHORT_DELAY } from '../../utils/constants';
+import * as dependencies from '../../utils/dependencies';
+import * as math from '../../utils/math';
+import * as vueCommon from '../../utils/vueCommon';
 
 import type { IProgressMessage } from '../OpenCOR.vue';
 

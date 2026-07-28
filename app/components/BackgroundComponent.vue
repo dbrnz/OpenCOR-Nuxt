@@ -18,7 +18,7 @@
  *  - Height: 257.92px + 8px = 266.92px.
  */
 
-import { currentVersion } from '../common/version';
+import { currentVersion } from '../utils/version';
 
-import { COPYRIGHT } from '../common/constants';
+import { COPYRIGHT } from '../utils/constants';
 </script>

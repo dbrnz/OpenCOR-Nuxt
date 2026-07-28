@@ -66,8 +66,8 @@ import * as vueusecore from '@vueuse/core';
 
 import * as vue from 'vue';
 
-import * as common from '../common/common';
-import { electronApi } from '../common/electronApi';
+import * as common from '../utils/common';
+import { electronApi } from '../utils/electronApi';
 import * as locApi from '../libopencor/locApi';
 
 import SimulationExperimentView from './views/SimulationExperimentView.vue';

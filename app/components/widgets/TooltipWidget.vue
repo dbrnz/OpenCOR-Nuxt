@@ -11,7 +11,7 @@
 import Popover from 'primevue/popover';
 import * as vue from 'vue';
 
-import * as vueCommon from '../../common/vueCommon';
+import * as vueCommon from '../../utils/vueCommon';
 
 const props = defineProps<{
   content: string;

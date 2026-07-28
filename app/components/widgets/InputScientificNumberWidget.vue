@@ -57,7 +57,7 @@
 <script setup lang="ts">
 import * as vue from 'vue';
 
-import * as constants from '../../common/constants';
+import * as constants from '../../utils/constants';
 
 defineOptions({
   inheritAttrs: false

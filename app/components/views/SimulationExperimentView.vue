@@ -263,17 +263,17 @@ import * as vue from 'vue';
 
 import type { IOpenCORExternalDataEvent, IOpenCORSimulationDataEvent } from '../../../index';
 
-import * as colors from '../../common/colors';
-import * as common from '../../common/common';
-import { MEDIUM_DELAY, VERY_SHORT_DELAY } from '../../common/constants';
-import * as dependencies from '../../common/dependencies';
-import * as vueCommon from '../../common/vueCommon';
-import * as externalData from '../../common/externalData';
-import * as locCommon from '../../common/locCommon';
+import * as colors from '../../utils/colors';
+import * as common from '../../utils/common';
+import { MEDIUM_DELAY, VERY_SHORT_DELAY } from '../../utils/constants';
+import * as dependencies from '../../utils/dependencies';
+import * as vueCommon from '../../utils/vueCommon';
+import * as externalData from '../../utils/externalData';
+import * as locCommon from '../../utils/locCommon';
 import * as locApi from '../../libopencor/locApi';
 import * as locSedApi from '../../libopencor/locSedApi';
 import * as locUiJsonApi from '../../libopencor/locUiJsonApi';
-import * as math from '../../common/math';
+import * as math from '../../utils/math';
 
 import type { ISimulationExperimentViewSettings } from '../dialogs/SimulationExperimentViewSettingsDialog.vue';
 import GraphPanelWidget from '../widgets/GraphPanelWidget.vue';

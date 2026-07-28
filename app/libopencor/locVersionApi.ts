@@ -1,4 +1,4 @@
-import { electronApi } from '../common/electronApi';
+import { electronApi } from '../utils/electronApi';
 
 import { _cppLocApi, _wasmLocApi } from './locApi';
 

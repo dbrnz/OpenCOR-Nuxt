@@ -875,10 +875,10 @@
 import Popover from 'primevue/popover';
 import * as vue from 'vue';
 
-import * as common from '../../common/common';
-import { TOAST_LIFE } from '../../common/constants';
-import * as externalData from '../../common/externalData';
-import * as vueCommon from '../../common/vueCommon';
+import * as common from '../../utils/common';
+import { TOAST_LIFE } from '../../utils/constants';
+import * as externalData from '../../utils/externalData';
+import * as vueCommon from '../../utils/vueCommon';
 import * as locApi from '../../libopencor/locApi';
 import * as locUiJsonApi from '../../libopencor/locUiJsonApi';
 import { validateUiJson } from '../../libopencor/locUiJsonApi';

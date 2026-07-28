@@ -33,7 +33,7 @@
 <script setup lang="ts">
 import * as vue from 'vue';
 
-import * as vueCommon from '../../common/vueCommon';
+import * as vueCommon from '../../utils/vueCommon';
 import type * as locApi from '../../libopencor/locApi';
 
 const value = defineModel<number>({ required: true });

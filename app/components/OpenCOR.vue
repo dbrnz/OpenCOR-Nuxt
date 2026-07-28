@@ -132,16 +132,16 @@ import { provideOpenCORToast } from '../components/OpenCORToast';
 
 import '../assets/app.css';
 import '../assets/primeicons-assets';
-import * as common from '../common/common';
-import { FULL_URI_SCHEME, LONG_DELAY, SHORT_DELAY, TOAST_LIFE } from '../common/constants';
-import { electronApi } from '../common/electronApi';
+import * as common from '../utils/common';
+import { FULL_URI_SCHEME, LONG_DELAY, SHORT_DELAY, TOAST_LIFE } from '../utils/constants';
+import { electronApi } from '../utils/electronApi';
 /* TODO: enable once our GitHub integration is fully ready.
-import firebaseConfig, { missingFirebaseKeys } from '../common/firebaseConfig';
+import firebaseConfig, { missingFirebaseKeys } from '../utils/firebaseConfig';
 */
-import * as initialisation from '../common/initialisation';
-import * as locCommon from '../common/locCommon';
-import * as version from '../common/version';
-import * as vueCommon from '../common/vueCommon';
+import * as initialisation from '../utils/initialisation';
+import * as locCommon from '../utils/locCommon';
+import * as version from '../utils/version';
+import * as vueCommon from '../utils/vueCommon';
 import ContentsComponent from '../components/ContentsComponent.vue';
 import * as locApi from '../libopencor/locApi';
 
