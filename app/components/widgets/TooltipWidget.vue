@@ -8,7 +8,7 @@
 </template>
 
 <script setup lang="ts">
-import Popover from 'primevue/popover';
+import type Popover from 'primevue/popover';
 import * as vue from 'vue';
 
 import * as vueCommon from '../../utils/vueCommon';

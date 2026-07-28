@@ -258,7 +258,7 @@
 <script setup lang="ts">
 import * as vueusecore from '@vueuse/core';
 
-import Popover from 'primevue/popover';
+import type Popover from 'primevue/popover';
 import * as vue from 'vue';
 
 import type { IOpenCORExternalDataEvent, IOpenCORSimulationDataEvent } from '../../../index';
@@ -272,11 +272,11 @@ import * as externalData from '../../utils/externalData';
 import * as locCommon from '../../utils/locCommon';
 import * as locApi from '../../libopencor/locApi';
 import * as locSedApi from '../../libopencor/locSedApi';
-import * as locUiJsonApi from '../../libopencor/locUiJsonApi';
+import type * as locUiJsonApi from '../../libopencor/locUiJsonApi';
 import * as math from '../../utils/math';
 
 import type { ISimulationExperimentViewSettings } from '../dialogs/SimulationExperimentViewSettingsDialog.vue';
-import GraphPanelWidget from '../widgets/GraphPanelWidget.vue';
+import type GraphPanelWidget from '../widgets/GraphPanelWidget.vue';
 import type { IGraphPanelData, IGraphPanelPlotTrace, IGraphPanelMargins } from '../widgets/GraphPanelWidget.vue';
 
 interface ISimulationRun {

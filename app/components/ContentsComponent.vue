@@ -70,7 +70,7 @@ import * as common from '../utils/common';
 import { electronApi } from '../utils/electronApi';
 import * as locApi from '../libopencor/locApi';
 
-import SimulationExperimentView from './views/SimulationExperimentView.vue';
+import type SimulationExperimentView from './views/SimulationExperimentView.vue';
 import type { IOpenCORExternalDataEvent, IOpenCORSimulationDataEvent } from '../../index';
 
 interface IFileTab {

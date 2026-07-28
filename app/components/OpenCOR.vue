@@ -142,12 +142,12 @@ import * as initialisation from '../utils/initialisation';
 import * as locCommon from '../utils/locCommon';
 import * as version from '../utils/version';
 import * as vueCommon from '../utils/vueCommon';
-import ContentsComponent from '../components/ContentsComponent.vue';
+import type ContentsComponent from '../components/ContentsComponent.vue';
 import * as locApi from '../libopencor/locApi';
 
 import { provideDialogState } from './dialogs/BaseDialog.vue';
-import SafeBlockUIWidget from './widgets/SafeBlockUIWidget.vue';
-import MainMenu from './MainMenu.vue';
+import type SafeBlockUIWidget from './widgets/SafeBlockUIWidget.vue';
+import type MainMenu from './MainMenu.vue';
 
 const props = defineProps<IOpenCORProps>();
 
