@@ -1,5 +1,7 @@
 <template>
-  <OpenCOR />
+  <div style="height: 100vh; height: 100dvh;">
+    <OpenCOR />
+  </div>
 </template>
 
 <style>
