@@ -1,0 +1,185 @@
+import * as vue from 'vue';
+
+import type { File as IWasmFile, FileManager as IWasmFileManagerInstance } from '@opencor/libopencor-types';
+
+import {
+  _cppLocApi,
+  _wasmLocApi,
+  cppVersion,
+  type IIssue,
+  type IUiJson,
+  normaliseUiJson,
+  SedDocument,
+  wasmIssuesToIssues
+} from './locApi';
+
+// FileManager API.
+
+class FileManager {
+  protected static _instance: FileManager | null = null;
+  private _fileManager: IWasmFileManagerInstance | null = null;
+
+  static instance(): FileManager {
+    FileManager._instance ??= new FileManager();
+
+    return FileManager._instance;
+  }
+
+  private constructor() {
+    // Have a private constructor so that we cannot instantiate this class directly.
+  }
+
+  private fileManager(): IWasmFileManagerInstance {
+    this._fileManager ??= _wasmLocApi.FileManager.instance();
+
+    return this._fileManager;
+  }
+
+  file(path: string): File | null {
+    if (cppVersion()) {
+      const contents = _cppLocApi.fileContents(path);
+
+      if (contents) {
+        return new File(path, contents);
+      }
+
+      return null;
+    }
+
+    const fileManager = this.fileManager();
+    const files = fileManager.files;
+
+    for (const file of files) {
+      if (!file) {
+        continue;
+      }
+
+      if (file.path === path) {
+        return new File(path, file.contents());
+      }
+    }
+
+    return null;
+  }
+
+  unmanage(path: string): void {
+    if (cppVersion()) {
+      _cppLocApi.fileManagerUnmanage(path);
+    } else {
+      const fileManager = this.fileManager();
+      const files = fileManager.files;
+
+      for (const file of files) {
+        if (!file) {
+          continue;
+        }
+
+        if (file.path === path) {
+          fileManager.unmanage(file);
+
+          break;
+        }
+      }
+    }
+  }
+}
+
+export const fileManager = FileManager.instance();
+
+// File API.
+
+export enum EFileType {
+  UNKNOWN_FILE,
+  CELLML_FILE,
+  SEDML_FILE,
+  COMBINE_ARCHIVE,
+  IRRETRIEVABLE_FILE
+}
+
+export class File {
+  _path: string;
+  _wasmFile: IWasmFile = {} as IWasmFile;
+  _issues: IIssue[] = [];
+
+  constructor(path: string, contents: Uint8Array | undefined = undefined) {
+    this._path = path;
+
+    if (cppVersion()) {
+      _cppLocApi.fileCreate(path, contents);
+
+      this._issues = _cppLocApi.fileIssues(path);
+    } else if (contents) {
+      this._wasmFile = vue.markRaw(new _wasmLocApi.File(path));
+
+      this._wasmFile.setContents(contents);
+
+      this._issues = wasmIssuesToIssues(this._wasmFile.issues);
+    } else {
+      // Note: we should never reach this point since we should always provide some file contents when using the WASM
+      //       version of libOpenCOR.
+
+      console.warn(`OpenCOR: no contents provided for file '${path}'.`);
+
+      return;
+    }
+  }
+
+  type(): EFileType {
+    return cppVersion() ? _cppLocApi.fileType(this._path) : this._wasmFile.type.value;
+  }
+
+  path(): string {
+    return this._path;
+  }
+
+  issues(): IIssue[] {
+    return this._issues;
+  }
+
+  contents(): Uint8Array {
+    return cppVersion() ? _cppLocApi.fileContents(this._path) : this._wasmFile.contents();
+  }
+
+  document(): SedDocument {
+    return new SedDocument(this._path, this._wasmFile);
+  }
+
+  uiJson(): IUiJson | undefined {
+    let uiJsonContents: Uint8Array | undefined;
+
+    if (cppVersion()) {
+      uiJsonContents = _cppLocApi.fileUiJson(this._path);
+
+      if (!uiJsonContents) {
+        return undefined;
+      }
+    } else {
+      const uiJson = this._wasmFile.childFileFromFileName('simulation.json');
+
+      if (!uiJson) {
+        return undefined;
+      }
+
+      uiJsonContents = uiJson.contents();
+    }
+
+    const decoder = new TextDecoder();
+    let res: unknown;
+
+    try {
+      res = JSON.parse(decoder.decode(uiJsonContents));
+    } catch (_error: unknown) {
+      console.warn(`OpenCOR: unable to parse the UI JSON for file '${this._path}'.`);
+
+      return undefined;
+    }
+
+    if (!res || typeof res !== 'object' || Array.isArray(res)) {
+      console.warn(`OpenCOR: the UI JSON for file '${this._path}' has an unexpected structure.`);
+
+      return undefined;
+    }
+
+    return normaliseUiJson(res as IUiJson);
+  }
+}

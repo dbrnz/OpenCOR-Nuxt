@@ -1,0 +1,62 @@
+/* stylelint-disable at-rule-no-unknown, no-invalid-position-at-import-rule */
+@config "../../tailwind.config.ts";
+
+@layer theme, base, components, utilities;
+
+/* biome-ignore lint/correctness/noInvalidPositionAtImportRule: ignored using `--suppress` */
+@import "tailwindcss/theme.css" layer(theme);
+
+/* biome-ignore lint/correctness/noInvalidPositionAtImportRule: ignored using `--suppress` */
+@import "tailwindcss/utilities.css" layer(utilities);
+
+/* biome-ignore lint/correctness/noInvalidPositionAtImportRule: ignored using `--suppress` */
+@import "tailwindcss-primeui";
+
+/* biome-ignore lint/correctness/noInvalidPositionAtImportRule: ignored using `--suppress` */
+@import "primeicons/primeicons.css";
+
+body {
+  *,
+  ::before,
+  ::after {
+    box-sizing: initial;
+  }
+
+  .opencor {
+    --border-color: var(--p-content-border-color);
+
+    *,
+    ::before,
+    ::after {
+      box-sizing: border-box;
+    }
+
+    background-color: var(--p-content-background);
+    color: var(--p-content-color);
+    margin: 0;
+    font-family:
+      Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans",
+      "Droid Sans", "Helvetica Neue", sans-serif;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    user-select: none;
+
+    .p-component {
+      transition: none !important;
+    }
+
+    .p-contextmenu-item-content,
+    .p-contextmenu-item-link {
+      color: var(--p-contextmenu-item-color, var(--p-text-color));
+    }
+
+    a {
+      color: var(--p-button-link-color);
+    }
+
+    :focus {
+      outline: none !important;
+    }
+  }
+}

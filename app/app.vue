@@ -1,6 +1,7 @@
 <template>
-  <div>
-    <NuxtRouteAnnouncer />
-    <NuxtWelcome />
-  </div>
+  <OpenCOR />
 </template>
+
+<style>
+@import "tailwindcss/preflight.css" layer(base);
+</style>

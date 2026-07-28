@@ -1,0 +1,161 @@
+import type { MainModule as IWasmLocApi } from '@opencor/libopencor-types';
+
+import type { EFileType } from './locFileApi';
+import type { IIssue } from './locLoggerApi';
+
+export interface ICppLocApi {
+  // FileManager API.
+
+  fileManagerUnmanage: (path: string) => void;
+
+  // File API.
+
+  fileContents: (path: string) => Uint8Array;
+  fileCreate: (path: string, contents?: Uint8Array) => void;
+  fileIssues: (path: string) => IIssue[];
+  fileType: (path: string) => EFileType;
+  fileUiJson: (path: string) => Uint8Array | undefined;
+
+  // SedDocument API.
+
+  sedDocumentCreate: (path: string) => number;
+  sedDocumentInstantiate: (documentId: number) => number;
+  sedDocumentIssues: (documentId: number) => IIssue[];
+  sedDocumentModelCount: (documentId: number) => number;
+  sedDocumentSimulationCount: (documentId: number) => number;
+  sedDocumentSimulationType: (documentId: number, index: number) => number;
+  sedDocumentSerialise: (documentId: number) => string;
+
+  // SedModel API.
+
+  sedModelFilePath: (documentId: number, index: number) => string;
+  sedModelAddChange: (
+    documentId: number,
+    index: number,
+    componentName: string,
+    variableName: string,
+    newValue: string
+  ) => void;
+  sedModelRemoveAllChanges: (documentId: number, index: number) => void;
+
+  // SedOneStep API.
+
+  sedOneStepStep: (documentId: number, index: number) => number;
+
+  // SedUniformTimeCourse API.
+
+  sedUniformTimeCourseInitialTime: (documentId: number, index: number) => number;
+  sedUniformTimeCourseSetInitialTime: (documentId: number, index: number, value: number) => void;
+  sedUniformTimeCourseOutputStartTime: (documentId: number, index: number) => number;
+  sedUniformTimeCourseSetOutputStartTime: (documentId: number, index: number, value: number) => void;
+  sedUniformTimeCourseOutputEndTime: (documentId: number, index: number) => number;
+  sedUniformTimeCourseSetOutputEndTime: (documentId: number, index: number, value: number) => void;
+  sedUniformTimeCourseNumberOfSteps: (documentId: number, index: number) => number;
+  sedUniformTimeCourseSetNumberOfSteps: (documentId: number, index: number, value: number) => void;
+
+  // SolverCvode API.
+  // TODO: this is only temporary until we have full support for our different solvers.
+
+  solverCvodeMaximumStep: (documentId: number, index: number) => number;
+  solverCvodeSetMaximumStep: (documentId: number, index: number, value: number) => void;
+
+  // SedInstance API.
+
+  sedInstanceHasIssues: (instanceId: number) => boolean;
+  sedInstanceIssues: (instanceId: number) => IIssue[];
+  sedInstanceStatus: (instanceId: number) => number;
+  sedInstanceProgress: (instanceId: number) => number;
+  sedInstanceStartRun: (instanceId: number) => boolean;
+  sedInstanceWaitForRun: (instanceId: number) => number;
+  sedInstancePauseRun: (instanceId: number) => void;
+  sedInstanceResumeRun: (instanceId: number) => void;
+  sedInstanceStopRun: (instanceId: number) => void;
+
+  // SedInstanceTask API.
+
+  sedInstanceTaskVoiName: (instanceId: number, index: number) => string;
+  sedInstanceTaskVoiUnit: (instanceId: number, index: number) => string;
+  sedInstanceTaskVoi: (instanceId: number, index: number) => Float64Array;
+  sedInstanceTaskStateCount: (instanceId: number, index: number) => number;
+  sedInstanceTaskStateName: (instanceId: number, index: number, stateIndex: number) => string;
+  sedInstanceTaskStateUnit: (instanceId: number, index: number, stateIndex: number) => string;
+  sedInstanceTaskState: (instanceId: number, index: number, stateIndex: number) => Float64Array;
+  sedInstanceTaskRateCount: (instanceId: number, index: number) => number;
+  sedInstanceTaskRateName: (instanceId: number, index: number, rateIndex: number) => string;
+  sedInstanceTaskRateUnit: (instanceId: number, index: number, rateIndex: number) => string;
+  sedInstanceTaskRate: (instanceId: number, index: number, rateIndex: number) => Float64Array;
+  sedInstanceTaskConstantCount: (instanceId: number, index: number) => number;
+  sedInstanceTaskConstantName: (instanceId: number, index: number, constantIndex: number) => string;
+  sedInstanceTaskConstantUnit: (instanceId: number, index: number, constantIndex: number) => string;
+  sedInstanceTaskConstant: (instanceId: number, index: number, constantIndex: number) => Float64Array;
+  sedInstanceTaskComputedConstantCount: (instanceId: number, index: number) => number;
+  sedInstanceTaskComputedConstantName: (instanceId: number, index: number, computedConstantIndex: number) => string;
+  sedInstanceTaskComputedConstantUnit: (instanceId: number, index: number, computedConstantIndex: number) => string;
+  sedInstanceTaskComputedConstant: (instanceId: number, index: number, computedConstantIndex: number) => Float64Array;
+  sedInstanceTaskAlgebraicVariableCount: (instanceId: number, index: number) => number;
+  sedInstanceTaskAlgebraicVariableName: (instanceId: number, index: number, algebraicVariableIndex: number) => string;
+  sedInstanceTaskAlgebraicVariableUnit: (instanceId: number, index: number, algebraicVariableIndex: number) => string;
+  sedInstanceTaskAlgebraicVariable: (instanceId: number, index: number, algebraicVariableIndex: number) => Float64Array;
+
+  // Version API.
+
+  version: () => string;
+}
+
+// The C++ or WASM version of libOpenCOR that is to be used.
+
+export let _cppLocApi = {} as ICppLocApi;
+export let _wasmLocApi = {} as IWasmLocApi;
+
+export const setCppLocApi = (api: ICppLocApi): void => {
+  _cppLocApi = api;
+};
+
+export const setWasmLocApi = (api: IWasmLocApi): void => {
+  _wasmLocApi = api;
+};
+
+// Logger API.
+
+export { EIssueType, type IIssue, wasmIssuesToIssues } from './locLoggerApi';
+
+// File API.
+
+export { EFileType, File, fileManager } from './locFileApi';
+
+// SED-ML API.
+
+export {
+  ESedSimulationType,
+  SedDocument,
+  SedInstance,
+  SedInstanceTask,
+  SedUniformTimeCourse
+} from './locSedApi';
+
+// UI JSON API.
+
+export {
+  type IUiJson,
+  type IUiJsonDiscreteInput,
+  type IUiJsonDiscreteInputPossibleValue,
+  type IUiJsonInput,
+  type IUiJsonOutput,
+  type IUiJsonOutputData,
+  type IUiJsonOutputExternalData,
+  type IUiJsonOutputExternalDataSeries,
+  type IUiJsonOutputPlot,
+  type IUiJsonOutputPlotAdditionalTrace,
+  type IUiJsonParameter,
+  type IUiJsonScalarInput,
+  cleanUiJson,
+  isScalarInput,
+  isDiscreteInput,
+  normaliseUiJson,
+  uiJsonReplacer,
+  validateUiJson
+} from './locUiJsonApi';
+
+// Version API.
+
+export { cppVersion, version, wasmVersion } from './locVersionApi';

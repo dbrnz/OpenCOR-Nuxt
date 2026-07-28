@@ -1,0 +1,19 @@
+#!/usr/bin/env bun
+
+import fs from 'node:fs';
+import * as tar from 'tar';
+
+if (!fs.existsSync('dist')) {
+  fs.mkdirSync('dist');
+}
+
+const version = (JSON.parse(fs.readFileSync('package.json')) as { version: string }).version;
+
+tar.c(
+  {
+    gzip: true,
+    file: `dist/OpenCOR-${version}-WebApp.tar.gz`,
+    cwd: 'src/renderer/dist'
+  },
+  ['.']
+);
