@@ -14,20 +14,20 @@ const libopencorFiles = [
     'libopencor.wasm'
 ]
 
-const installedVersions = fs.readdirSync(versionedBase, { withFileTypes: true }).filter((e) => e.isDirectory)
-
-for (const entry of installedVersions) {
-    if (entry.name !== libopencorVersion) {
-        const uninstallPath = `${versionedBase}/${entry.name}`
-        console.log(`Removing libopencor from ${uninstallPath}`)
-
-        fs.rmSync(uninstallPath, { recursive: true, force: true })
+if (fs.existsSync(versionedBase)) {
+    const installedVersions = fs.readdirSync(versionedBase, { withFileTypes: true }).filter((e) => e.isDirectory)
+    for (const entry of installedVersions) {
+        if (entry.name !== libopencorVersion) {
+            const uninstallPath = `${versionedBase}/${entry.name}`
+            console.log(`Removing libopencor from ${uninstallPath}`)
+            fs.rmSync(uninstallPath, { recursive: true, force: true })
+        }
     }
 }
 
 const installPath = `${versionedBase}/${libopencorVersion}`
 if (!fs.existsSync(installPath)) {
-    await fs.mkdirSync(installPath, { mode: 0o755 })
+    await fs.mkdirSync(installPath, { mode: 0o755, recursive: true })
 }
 
 for (const file of libopencorFiles) {
