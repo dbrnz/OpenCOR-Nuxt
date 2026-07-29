@@ -9,6 +9,7 @@
         "@opencor/libopencor-types": "^1.20260723.2",
         "@primeuix/themes": "2.0.3",
         "@vueuse/core": "^14.3.0",
+        "ioredis": "^5.11.1",
         "nuxt": "^4.5.1",
         "primeicons": "7.0.0",
         "primevue": "4.2.5",

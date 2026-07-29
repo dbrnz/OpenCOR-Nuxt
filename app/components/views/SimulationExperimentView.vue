@@ -82,7 +82,7 @@
                     size="small"
                     class="w-full"
                     :appendTo="appendTarget"
-                    @change="updatePlot()"
+                    @change="yAxisChange()"
                   />
                 </Fieldset>
                 <Fieldset v-if="preSimulationDuration" legend="Note" class="note">
@@ -349,6 +349,47 @@ const populateParameters = (
 
   parameters.value.sort((parameter1: string, parameter2: string) => parameter1.localeCompare(parameter2));
 };
+
+//==============================================================================
+
+let broadcastSocket = null
+
+vue.onMounted(() => {
+  // Derive WebSocket protocol based on environment (ws:// or wss://)
+  const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
+  broadcastSocket = new WebSocket(`${protocol}//${window.location.host}/api/broadcast`)
+
+  broadcastSocket.onmessage = (event) => {
+    const data = JSON.parse(event.data)
+
+// this has to be specific to the open simulation...
+// and check that it matches the simulation's id
+//
+//
+
+console.log('got broadcast', data)
+
+  }
+})
+
+vue.onBeforeUnmount(() => {
+  if (broadcastSocket) {
+    broadcastSocket.close()
+  }
+})
+
+const broadcast = (data) => {
+// this has to be specific to the open simulation...
+//
+// add an `id` field to the message
+
+// Have an 'open viewer' button that opens a new browser window/tab with the viewer's URL,
+// passing the simulation's id as a parameter.
+
+  broadcastSocket.send(JSON.stringify(data))
+}
+
+//==============================================================================
 
 // A helper function to wait while a simulation instance is running, yielding to the UI to keep it responsive.
 // Note: we return a promise (that resolves when the simulation is idle) and a cancel function to clear any pending
@@ -735,6 +776,13 @@ const updatePlot = (dataSize: number = 0) => {
     ]
   };
 };
+
+const yAxisChange = (dataSize: number = 0) => {
+  broadcast({
+    'y-axis': standardYParameter.value
+  })
+  updatePlot(dataSize)
+}
 
 // Interactive mode.
 
