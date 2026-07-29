@@ -95,7 +95,7 @@ const createLazyInitialiser = (
 ) => {
   return async (): Promise<void> => {
     try {
-      // Import the exteral dependency and set it.
+      // Import the external dependency and set it.
 
       const module = await import(/* @vite-ignore */ url);
 
