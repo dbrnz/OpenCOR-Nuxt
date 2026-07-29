@@ -58,6 +58,14 @@ export default defineNuxtConfig({
   future: {
     compatibilityVersion: 4, // Ensures strict Nuxt 4 directory conventions
   },
+  routeRules: {
+    '/**': {
+      headers: {
+        'Cross-Origin-Opener-Policy': 'same-origin',
+        'Cross-Origin-Embedder-Policy': 'require-corp'
+      }
+    }
+  },
   sourcemap: {
     server: true,
     client: true,
