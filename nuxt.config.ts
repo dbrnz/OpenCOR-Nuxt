@@ -58,6 +58,11 @@ export default defineNuxtConfig({
   future: {
     compatibilityVersion: 4, // Ensures strict Nuxt 4 directory conventions
   },
+  nitro: {
+    experimental: {
+      websocket: true
+    }
+  },
   sourcemap: {
     server: true,
     client: true,
