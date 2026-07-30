@@ -3,6 +3,7 @@
 import fs from 'node:fs';
 
 for (const path of [
+  '.nuxt',
   'app/components.d.ts',
   'dist',
   'node_modules',
