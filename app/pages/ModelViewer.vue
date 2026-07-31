@@ -1,13 +1,13 @@
 <template>
-       <ClientOnly>
-            <SvgViewer
-                class="celldl-viewer"
-                :annotations="annotations"
-                :svgData="svgData"
-                @error="onError"
-                @event="onEvent"
-            />
-      </ClientOnly>
+    <ClientOnly>
+        <SvgViewer
+            class="celldl-viewer"
+            :annotations="annotations"
+            :svgData="svgData"
+            @error="onError"
+            @event="onEvent"
+        />
+    </ClientOnly>
 </template>
 
 <script setup lang="ts">
