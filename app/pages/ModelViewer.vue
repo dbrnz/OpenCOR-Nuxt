@@ -1,9 +1,9 @@
 <template>
        <ClientOnly>
-            <CellDLViewer
+            <SvgViewer
                 class="celldl-viewer"
                 :annotations="annotations"
-                :celldlData="celldlData"
+                :svgData="svgData"
                 @error="onError"
                 @event="onEvent"
             />
@@ -14,7 +14,7 @@
 
 import '@celldl/viewer/style.css';
 
-import CellDLViewer from '@celldl/viewer'
+import SvgViewer from '@celldl/viewer'
 
 import type { Annotations, ViewerEvent } from '@celldl/viewer'
 
@@ -22,7 +22,7 @@ import { testSvg } from '~/celldl/testsvg'
 
 const annotations = ref<Annotations>({})
 
-const celldlData = ref<string>(testSvg)
+const svgData = ref<string>(testSvg)
 
 function onError(msg: string) {
   window.alert(msg);
@@ -36,6 +36,6 @@ function onEvent(detail: ViewerEvent) {
 <style scoped>
 .celldl-viewer {
     height: calc(100dvh - 16px);
-    border: 2px solid red;
+    border: 2px solid grey;
 }
 </style>
