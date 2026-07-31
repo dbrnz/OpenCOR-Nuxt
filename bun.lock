@@ -5,7 +5,7 @@
     "": {
       "name": "@opencor/opencor",
       "dependencies": {
-        "@celldl/viewer": "^0.20260731.3",
+        "@celldl/viewer": "^0.20260801.0",
         "@napi-rs/keyring": "^1.3.0",
         "@opencor/libopencor-types": "^1.20260723.2",
         "@primeuix/themes": "2.0.3",
@@ -122,7 +122,7 @@
 
     "@cacheable/utils": ["@cacheable/utils@2.5.0", "", { "dependencies": { "hashery": "^1.5.1", "keyv": "^5.6.0" } }, "sha512-buipgOVDkkPXNR5+xBpDw7Zk2n1EvU7qBJCNUcL7rhQ//kfpOXPAvQ511Os0vpLYJ1pZnvudNytkQt2hst3wqA=="],
 
-    "@celldl/viewer": ["@celldl/viewer@0.20260731.3", "", { "dependencies": { "@atomic-ehr/ucum": "^0.2.5", "@jeswr/pretty-turtle": "^1.8.2", "@vueuse/core": "14.1.0", "oxigraph": "^0.5.2", "systeminformation": "^5.27.11", "transformation-matrix": "^3.1.0", "ua-parser-js": "^2.0.8", "vue": "3.4.21", "vue-tippy": "^6.7.1" } }, "sha512-FZ7wVgS7oIbRbM//lWoJSPUpNZGMohNouQ3q6mzNan0V4o6It5aqRR9N+tx+9AnIpMpA7TCaaGojyJidTtYeTA=="],
+    "@celldl/viewer": ["@celldl/viewer@0.20260801.0", "", { "dependencies": { "@atomic-ehr/ucum": "^0.2.5", "@jeswr/pretty-turtle": "^1.8.2", "@vueuse/core": "14.1.0", "oxigraph": "^0.5.2", "systeminformation": "^5.27.11", "transformation-matrix": "^3.1.0", "ua-parser-js": "^2.0.8", "vue": "3.4.21", "vue-tippy": "^6.7.1" } }, "sha512-OIzl8ipBeONhra10VSk0Duw+hUMYTRReBq0q6Y7wHnE1+Gm/nnRxI21wkIEOxtnZpg4H6DNwFn0fSzcJmJHbLg=="],
 
     "@clack/core": ["@clack/core@1.4.3", "", { "dependencies": { "fast-wrap-ansi": "^0.2.0", "sisteransi": "^1.0.5" } }, "sha512-/kr3UWNtdJfxZtPgDqUOmG2pvwlmcLGheex5yiZKdwbzZJxhV+HMNR9QNmyY5cGwTNV6LrR7Jtp+KjhUAP1qBQ=="],
 
