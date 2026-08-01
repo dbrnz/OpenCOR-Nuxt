@@ -64,6 +64,7 @@
     "@primeuix/themes": "2.0.3",
     "@primevue/auto-import-resolver": "^5.0.0",
     "@vueuse/core": "^14.3.0",
+    "mime": "^4.1.0",
     "nuxt": "^4.5.1",
     "primeicons": "7.0.0",
     "primevue": "4.2.5",
