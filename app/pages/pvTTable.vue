@@ -80,13 +80,6 @@ function buildDirectoryTree(dirList?: FsEntry[]): TreeNode[] {
     return tree
 }
 
-function getRowElement(key: string) {
-    const nameField = document.getElementById(key)
-    if (nameField) {
-        return nameField.parentElement?.parentElement?.parentElement?.parentElement
-    }
-}
-
 onMounted(async () => {
   const dirList = await $fetch<FsEntry[]>('/api/dir')
   nodes.value = buildDirectoryTree(dirList)
@@ -112,47 +105,7 @@ async function onNodeUnselected(node: TreeNode) {
         lastClickTime = Date.now()
         console.log('Unselected', node.key, selectedKey.value)
     }
-
-
-
-
-    /*
-    const rowElement = getRowElement(node.key)
-    if (rowElement) {
-        await nextTick()
-        rowElement.classList.add('p-treetable-row-selected')
-    } */
 }
-
-const onNodeClick = (event) => {
-    console.log('Click', event, node, selectedKeys.value)
-
-    //event.target.parentElement.parentElement.classList.add('p-tree-node-selected')
-    event.target.parentElement.parentElement.parentElement.parentElement.classList.add('p-treetable-row-selected')
-}
-
-const onNodeDblClick = (event) => {
-    console.log('Dbl click', event, node)
-}
-const onRowClick = (event, node) => {
-    console.log('row click', event, node)
-}
-
-const selectedKeys = ref<Record<string, boolean>>(null);
-
-// Toggle function
-const toggleNodeSelection = (key: string) => {
-    if (selectedKeys.value[key]) {
-        // If already selected, remove it to unselect
-        delete selectedKeys.value[key]
-    } else {
-        // If not selected, add it to select
-        selectedKeys.value[key] = true
-    }
-    // Force Vue to react to the object property modification
-    selectedKeys.value = { ...selectedKeys.value };
-};
-
 
 async function onNodeExpand(node: TreeNode) {
     if (!node.children) {
