@@ -4,12 +4,17 @@
     :value="nodes"
     loadingMode="icon"
     selectionMode="single"
-    v-model:selectionKeys="selectedKey"
-    @node-expand="onNodeExpand"
+    size="small"
+    v-model:selectionKeys="selectedKeys"
+    v-model:expandedKeys="expandedKeys"
+    @nodeExpand="onNodeExpand"
+    @nodeCollapse="onNodeCollapse"
     @nodeSelect="onNodeSelected"
     @nodeUnselect="onNodeUnselected"
     :resizableColumns="true"
     showGridlines
+    sortField="name"
+    :sortOrder="1"
     scrollable scrollHeight="400px"
     class="w-full md:w-120"
     tableStyle="min-width: 50rem">
@@ -17,7 +22,7 @@
             <template #body="{ node }">
                 <span class="inline-flex items-center gap-2">
                     <File v-if="node.leaf" class="mr-2" />
-                    <FolderOpen v-else-if="node.expanded" class="mr-2" />
+                    <FolderOpen v-else-if="node.data.expanded" class="mr-2" />
                     <Folder v-else class="mr-2" /></span>
                 <span :id="node.key"> {{ node.data.name }} </span>
             </template>
@@ -39,31 +44,45 @@
 </ClientOnly>
 </template>
 
-
 <script setup lang="ts">
 
 import File from '@primeicons/vue/file';
 import Folder from '@primeicons/vue/folder';
 import FolderOpen from '@primeicons/vue/folder-open';
-
 import type { TreeNode } from 'primevue/treenode'
 
+import type { FsEntry } from '#server/utils/fs'
+
+import { getExtension } from '~/utils/fs'
+
+//==============================================================================
+
+const MAX_DOUBLE_CLICK_TIME = 250   // milliseconds
+const MODELLING_STATE_STORAGE_KEY = 'modelling_workspace_state'
+
+//==============================================================================
+
+// Props
+
+const props = defineProps<{
+    fileTypes?: string[]
+}>()
+
+// Emits
+
+const emit = defineEmits<{
+  (event: 'select', filePath: string): void
+  (event: 'unSelect', filePath: string): void
+  (event: 'fileSelected', filePath: string): void
+}>();
+
+//==============================================================================
+
 const nodes = ref<TreeNode[]>([])
-const selectedKey = ref<Record<string, boolean>>({})
+const expandedKeys = ref<Record<string, boolean>>({})
+const selectedKeys = ref<Record<string, boolean>>({})
 
-const dirtree = ref(null)
-
-//import type { FSEntry } from '#server/utils/fs'
-export interface FsEntry {
-    name: string
-    path: string
-    isDirectory: boolean
-    isGitRepo: boolean
-    branch?: string
-    isIgnored?: boolean
-    size?: number
-    modified?: string
-}
+//==============================================================================
 
 function buildDirectoryTree(dirList?: FsEntry[]): TreeNode[] {
     const tree: TreeNode[] = []
@@ -73,39 +92,51 @@ function buildDirectoryTree(dirList?: FsEntry[]): TreeNode[] {
                 key: entry.path,
                 label: entry.name,
                 data: entry,
-                leaf: !entry.isDirectory
+                leaf: !entry.isDirectory,
+                selectable: !props.fileTypes
+                          || props.fileTypes.length === 0
+                          || props.fileTypes.includes(getExtension(entry.name))
             })
         }
     }
     return tree
 }
 
-onMounted(async () => {
-  const dirList = await $fetch<FsEntry[]>('/api/dir')
-  nodes.value = buildDirectoryTree(dirList)
+//==============================================================================
 
-  console.log(dirtree.value)
+onMounted(async () => {
+    const dirList = await $fetch<FsEntry[]>('/api/dir')
+    nodes.value = buildDirectoryTree(dirList)
+    // get expanded keys from local storage
+    expandedKeys.value = JSON.parse(localStorage.getItem(MODELLING_STATE_STORAGE_KEY) || '{}')
 })
+
+onUnmounted(() => {
+    // save expanded keys to local storage
+    localStorage.setItem(MODELLING_STATE_STORAGE_KEY, JSON.stringify(expandedKeys.value))
+})
+
+//==============================================================================
 
 let lastClickTime = Date.now()
 
 function onNodeSelected(node: TreeNode) {
-    console.log('Selected', node.key, selectedKey.value)
+    emit('select', node.key)
     lastClickTime = Date.now()
 }
-
-const MAX_DOUBLE_CLICK_TIME = 200   // milliseconds
 
 async function onNodeUnselected(node: TreeNode) {
     if ((Date.now() - lastClickTime) < MAX_DOUBLE_CLICK_TIME) {
         await nextTick()
-        selectedKey.value = { [node.key]: true }
-        console.log('Double click!!', node.key, selectedKey.value)
+        selectedKeys.value = { [node.key]: true }
+        emit('fileSelected', node.key)
     } else {
         lastClickTime = Date.now()
-        console.log('Unselected', node.key, selectedKey.value)
+        emit('unSelect', node.key)
     }
 }
+
+//==============================================================================
 
 async function onNodeExpand(node: TreeNode) {
     if (!node.children) {
@@ -114,5 +145,12 @@ async function onNodeExpand(node: TreeNode) {
         node.children = buildDirectoryTree(dirList)
         node.loading = false
     }
+    node.data.expanded = true
 }
+
+function onNodeCollapse(node: TreeNode) {
+    node.data.expanded = false
+}
+
+//==============================================================================
 </script>
