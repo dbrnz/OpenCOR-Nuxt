@@ -109,7 +109,15 @@ export function listDirectory(dirPath: string): FsEntry[]|undefined {
     return visible
         .map((e) => {
             const fullPath = path.join(resolved, e.name)
-            const isDir = e.isDirectory()
+            let isDir = e.isDirectory()
+            if (!isDir && e.isSymbolicLink()) {
+                try {
+                    fs.readdirSync(fullPath)
+                    isDir = true
+                } catch(_) {
+                    // ignore
+                }
+            }
             let isGitRepo = false
             if (isDir) {
                 try {
