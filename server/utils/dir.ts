@@ -3,7 +3,7 @@
 import fs from 'node:fs'
 import type { H3Event } from 'h3'
 
-import { listDirectory } from './fs'
+import { getFsEntry } from './fs'
 
 //==============================================================================
 
@@ -13,7 +13,7 @@ export function dirlist(dirPath: string|undefined, event: H3Event) {
         if (!fullPath) {
             setResponseStatus(event, 401)
         } else if (fs.existsSync(fullPath)) {
-            return listDirectory(fullPath)
+            return getFsEntry(fullPath)
         } else {
             setResponseStatus(event, 404)
             return {

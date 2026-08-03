@@ -88,7 +88,7 @@ function buildDirectoryTree(dirList?: FsEntry[]): TreeNode[] {
     const tree: TreeNode[] = []
     if (dirList) {
         for (const entry of dirList) {
-            tree.push({
+            const node = {
                 key: entry.path,
                 label: entry.name,
                 data: entry,
@@ -96,7 +96,8 @@ function buildDirectoryTree(dirList?: FsEntry[]): TreeNode[] {
                 selectable: !props.fileTypes
                           || props.fileTypes.length === 0
                           || props.fileTypes.includes(getExtension(entry.name))
-            })
+            }
+            tree.push(node)
         }
     }
     return tree
@@ -105,8 +106,8 @@ function buildDirectoryTree(dirList?: FsEntry[]): TreeNode[] {
 //==============================================================================
 
 onMounted(async () => {
-    const dirList = await $fetch<FsEntry[]>('/api/dir')
-    nodes.value = buildDirectoryTree(dirList)
+    const dirList = await $fetch<FsEntry>('/api/dir')
+    nodes.value = buildDirectoryTree(dirList.children)
     // get expanded keys from local storage
     expandedKeys.value = JSON.parse(localStorage.getItem(MODELLING_STATE_STORAGE_KEY) || '{}')
 })
@@ -141,8 +142,8 @@ async function onNodeUnselected(node: TreeNode) {
 async function onNodeExpand(node: TreeNode) {
     if (!node.children) {
         node.loading = true
-        const dirList = await $fetch<FsEntry[]>(`/api/dir/${node.data.path}`)
-        node.children = buildDirectoryTree(dirList)
+        const dirList = await $fetch<FsEntry>(`/api/dir/${node.data.path}`)
+        node.children = buildDirectoryTree(dirList.children)
         node.loading = false
     }
     node.data.expanded = true

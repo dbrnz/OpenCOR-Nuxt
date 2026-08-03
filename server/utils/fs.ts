@@ -17,6 +17,7 @@ export interface FsEntry {
     path: string
     isDirectory: boolean
     isGitRepo: boolean
+    children?: FsEntry[]
     branch?: string
     isIgnored?: boolean
     size?: number
@@ -77,71 +78,80 @@ function getStat(path: string): fs.Stats | undefined {
     }
 }
 
+function gitRepo(dirPath: string): boolean {
+    try {
+        return fs.existsSync(path.join(dirPath, '.git'))
+    } catch {
+        // ignore
+    }
+    return false
+}
+
 //==============================================================================
 
-export function listDirectory(dirPath: string): FsEntry[]|undefined {
+export function getFsEntry(dirPath: string): FsEntry|undefined {
     const resolved = resolvePath(dirPath)
     if (!resolved) {
         return
+    }
+
+    const stat = getStat(resolved)
+    if (!stat) {
+        return
+    }
+    const entry: FsEntry = {
+        name: path.basename(resolved),
+        path: resolved,
+        isDirectory: stat.isDirectory(),
+        isGitRepo: false,
+        size: stat?.size,
+        modified: stat?.mtime.toISOString()
     }
 
     let entries: fs.Dirent[] = []
     try {
         entries = fs.readdirSync(resolved, { withFileTypes: true })
     } catch(_) {
-        const stat = getStat(resolved)
-        return [{
-            name: path.basename(resolved),
-            path: resolved,
-            isDirectory: false,
-            isGitRepo: false,
-            size: stat?.size,
-            modified: stat?.mtime.toISOString()
-        }]
+        return entry
     }
+    entry.isGitRepo = gitRepo(resolved)
 
-    const visible = entries.filter((e) => !e.name.startsWith('.'))
+    const children = entries.filter((e) => !e.name.startsWith('.'))
     const ignoredNames = getIgnoredNames(
         resolved,
-        visible.map((e) => e.name)
+        children.map((e) => e.name)
     )
 
-    return visible
-        .map((e) => {
-            const fullPath = path.join(resolved, e.name)
-            let isDir = e.isDirectory()
-            if (!isDir && e.isSymbolicLink()) {
-                try {
-                    fs.readdirSync(fullPath)
-                    isDir = true
-                } catch(_) {
-                    // ignore
-                }
+    entry.children = children.map((e) => {
+        const fullPath = path.join(resolved, e.name)
+        let isDir = e.isDirectory()
+        if (!isDir && e.isSymbolicLink()) {
+            try {
+                fs.readdirSync(fullPath)
+                isDir = true
+            } catch(_) {
+                // ignore
             }
-            let isGitRepo = false
-            if (isDir) {
-                try {
-                    isGitRepo = fs.existsSync(path.join(fullPath, '.git'))
-                } catch {
-                    // ignore
-                }
-            }
-            const stat = getStat(fullPath)
-            return {
-                name: e.name,
-                path: fullPath,
-                isDirectory: isDir,
-                isGitRepo,
-                branch: isGitRepo ? readBranch(fullPath) : undefined,
-                isIgnored: ignoredNames.has(e.name),
-                size: stat?.size,
-                modified: stat?.mtime.toISOString()
-            }
-        })
-        .sort((a, b) => {
-            if (a.isDirectory !== b.isDirectory) return a.isDirectory ? -1 : 1
-            return a.name.localeCompare(b.name)
-        })
+        }
+        const isGitRepo = isDir && gitRepo(fullPath)
+        const stat = getStat(fullPath)
+        return {
+            name: e.name,
+            path: fullPath,
+            isDirectory: isDir,
+            isGitRepo,
+            branch: isGitRepo ? readBranch(fullPath) : undefined,
+            isIgnored: ignoredNames.has(e.name),
+            size: stat?.size,
+            modified: stat?.mtime.toISOString()
+        }
+    })
+    .sort((a, b) => {
+        if (a.isDirectory !== b.isDirectory) return a.isDirectory ? -1 : 1
+        return a.name.localeCompare(b.name)
+    })
+
+    return entry
 }
 
 //==============================================================================
