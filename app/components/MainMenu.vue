@@ -54,6 +54,7 @@ const emit = defineEmits<{
   (event: 'open'): void;
   (event: 'openRemote'): void;
   (event: 'openSampleLorenz'): void;
+  (event: 'openWorkspace'): void;
   (event: 'settings'): void;
   (event: 'updateAvailable'): void;
 }>();
@@ -78,6 +79,12 @@ const items = vue.computed(() => [
         shortcut: isWindowsOrLinux ? 'Ctrl+Shift+Alt+O' : isMacOs ? '⇧⌘⌥O' : undefined,
         command: () => {
           emit('openRemote');
+        }
+      },
+      {
+        label: 'Open from Workspace...',
+        command: () => {
+          emit('openWorkspace');
         }
       },
       {

@@ -38,6 +38,7 @@
         @open="onOpenMenu"
         @openRemote="onOpenRemoteMenu"
         @openSampleLorenz="onOpenSampleLorenzMenu"
+        @openWorkspace="onOpenWorkspaceMenu"
         @close="onCloseMenu"
         @closeAll="onCloseAllMenu"
         @settings="onSettingsMenu"
@@ -92,6 +93,10 @@
       <OpenRemoteDialog v-model:visible="openRemoteVisible"
         @openRemote="onOpenRemote"
         @close="openRemoteVisible = false"
+      />
+      <OpenWorkspaceDialog v-model:visible="openWorkspaceVisible"
+        @openWorkspaceFile="onOpenWorkspaceFile"
+        @close="openWorkspaceVisible = false"
       />
       <SettingsDialog v-model:visible="settingsVisible"
         @close="settingsVisible = false"
@@ -971,6 +976,35 @@ const onOpenSampleLorenzMenu = (): void => {
   }
 
   openFile('https://github.com/opencor/webapp/raw/refs/heads/main/tests/models/ui/lorenz.omex');
+};
+
+// Open Workspace.
+
+const openWorkspaceVisible = vue.ref<boolean>(false);
+
+electronApi?.onOpenWorkspace(() => {
+  openWorkspaceVisible.value = true;
+});
+
+const onOpenWorkspaceMenu = (): void => {
+  if (props.omex) {
+    return;
+  }
+
+  openWorkspaceVisible.value = true;
+};
+
+const onOpenWorkspaceFile = async (filePath: string) => {
+  const data = await $fetch(`/api/file/${filePath}`);
+  const contents = (data instanceof Blob)
+                    ? await data.bytes()
+                  : typeof(data) === 'string'
+                    ? data
+                  : undefined;
+
+  if (contents) {
+    openFile(contents);
+  }
 };
 
 // Close.
