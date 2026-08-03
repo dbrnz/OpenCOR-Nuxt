@@ -16,7 +16,7 @@
     sortField="name"
     :sortOrder="1"
     scrollable scrollHeight="400px"
-    class="w-full md:w-120"
+    class="w-full"
     tableStyle="min-width: 50rem">
         <Column field="name" header="Name" expander sortable style="width: 45%">
             <template #body="{ node }">
@@ -24,15 +24,15 @@
                     <File v-if="node.leaf" class="mr-2" />
                     <FolderOpen v-else-if="node.data.expanded" class="mr-2" />
                     <Folder v-else class="mr-2" /></span>
-                <span :id="node.key"> {{ node.data.name }} </span>
+                <span :id="node.key" :class="{ selectable: node.leaf && node.selectable }"> {{ node.data.name }} </span>
             </template>
         </Column>
         <Column field="modified" header="Date Modified" sortable style="width: 40%"></Column>
-        <Column field="size" sortable style="width: 15%">
+        <Column field="size" sortable style="width: 10%">
         <template #header>
-            <div class="w-full text-right" style="width: 100%; text-align: right;">
+            <span class="p-treetable-column-title text-right" style="width: 100%; text-align: right;">
                 Size
-            </div>
+            </span>
         </template>
         <template #body="{ node }">
             <div style="width: 100%; text-align: right;">
@@ -155,3 +155,9 @@ function onNodeCollapse(node: TreeNode) {
 
 //==============================================================================
 </script>
+
+<style scoped>
+.selectable {
+    color: var(--p-primary-color)
+}
+</style>
