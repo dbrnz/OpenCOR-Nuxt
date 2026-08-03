@@ -93,9 +93,10 @@ function buildDirectoryTree(dirList?: FsEntry[]): TreeNode[] {
                 label: entry.name,
                 data: entry,
                 leaf: !entry.isDirectory,
-                selectable: !props.fileTypes
-                          || props.fileTypes.length === 0
-                          || props.fileTypes.includes(getExtension(entry.name))
+                selectable: !entry.isDirectory
+                            && (!props.fileTypes
+                              || props.fileTypes.length === 0
+                              || props.fileTypes.includes(getExtension(entry.name)))
             }
             tree.push(node)
         }
