@@ -94,21 +94,22 @@ onMounted(async () => {
   console.log(dirtree.value)
 })
 
-let lastSelectTime = Date.now()
+let lastClickTime = Date.now()
 
 function onNodeSelected(node: TreeNode) {
     console.log('Selected', node.key, selectedKey.value)
-    lastSelectTime = Date.now()
+    lastClickTime = Date.now()
 }
 
-const MAX_DOUBLE_CLICK_TIME = 20000   // milliseconds
+const MAX_DOUBLE_CLICK_TIME = 200   // milliseconds
 
 async function onNodeUnselected(node: TreeNode) {
-    if (Date.now() < (lastSelectTime + MAX_DOUBLE_CLICK_TIME)) {
+    if ((Date.now() - lastClickTime) < MAX_DOUBLE_CLICK_TIME) {
         await nextTick()
         selectedKey.value = { [node.key]: true }
         console.log('Double click!!', node.key, selectedKey.value)
     } else {
+        lastClickTime = Date.now()
         console.log('Unselected', node.key, selectedKey.value)
     }
 
