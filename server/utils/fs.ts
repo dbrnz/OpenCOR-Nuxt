@@ -100,8 +100,7 @@ export function listDirectory(dirPath: string): FsEntry[]|undefined {
         }]
     }
 
-    const visible = entries.filter((e) => e.name !== '.git')
-
+    const visible = entries.filter((e) => !e.name.startsWith('.'))
     const ignoredNames = getIgnoredNames(
         resolved,
         visible.map((e) => e.name)
