@@ -23,7 +23,18 @@
             </template>
         </Column>
         <Column field="modified" header="Date Modified" sortable style="width: 40%"></Column>
-        <Column field="size" header="Size" sortable style="width: 15%"></Column>
+        <Column field="size" sortable style="width: 15%">
+        <template #header>
+            <div class="w-full text-right" style="width: 100%; text-align: right;">
+                Size
+            </div>
+        </template>
+        <template #body="{ node }">
+            <div style="width: 100%; text-align: right;">
+                {{ node.data.size }}
+            </div>
+        </template>
+        </Column>
     </TreeTable>
 </ClientOnly>
 </template>
