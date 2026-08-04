@@ -5,7 +5,7 @@ import fs from 'node:fs'
 //==============================================================================
 
 import { resolvePath } from '#server/utils/environment'
-import { mimetype } from '#server/utils/mimetype'
+import { mediatype } from '#server/utils/mediatype'
 
 //==============================================================================
 
@@ -17,7 +17,7 @@ export default defineEventHandler(async (event) => {
             setResponseStatus(event, 401)
         } else if (fs.existsSync(fullPath)) {
             const fileStream = fs.createReadStream(fullPath)
-            const contentType = mimetype(fullPath)
+            const contentType = mediatype(fullPath)
             if (contentType) {
                 setResponseHeader(event, 'Content-Type', contentType)
             }

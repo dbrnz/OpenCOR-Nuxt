@@ -1,17 +1,17 @@
 //==============================================================================
 
-import { mimetype } from '#server/utils/mimetype'
+import { mediatype } from '~~/server/utils/mediatype'
 
 //==============================================================================
 
 export default defineEventHandler(async (event) => {
     const filePath = event.context.params?.path
     if (filePath) {
-        const type = mimetype(filePath)
+        const type = mediatype(filePath)
         if (type) {
             return {
                 path: filePath,
-                mimetype: type
+                mediatype: type
             }
         }
         return {

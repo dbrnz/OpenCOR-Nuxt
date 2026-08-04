@@ -18,7 +18,7 @@ type TypeMap = {
 // In our context, `.ts` means Typescript
 mime.define({'text/typescript': ['ts']}, true)
 
-// Some modelling specific mimetypes
+// Some modelling specific mediatypes
 const extendedTypes: TypeMap[] = [
     {'application/cellml+xml': ['cellml']},
     {'image/svg+xml': ['celldl']}
@@ -30,7 +30,7 @@ for (const typeMap of extendedTypes) {
 
 //==============================================================================
 
-export function mimetype(path: string): string|null {
+export function mediatype(path: string): string|null {
     return mime.getType(path)
 }
 
