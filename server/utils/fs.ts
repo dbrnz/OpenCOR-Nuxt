@@ -21,7 +21,8 @@ export interface FsEntry {
     branch?: string
     isIgnored?: boolean
     size?: number
-    modified?: string
+    modified?: number
+    modifiedDate?: string
 }
 
 //==============================================================================
@@ -105,7 +106,8 @@ export function getFsEntry(dirPath: string): FsEntry|undefined {
         isDirectory: stat.isDirectory(),
         isGitRepo: false,
         size: stat?.size,
-        modified: stat?.mtime.toISOString()
+        modified: stat?.mtimeMs,
+        modifiedDate: stat?.mtime.toISOString()
     }
 
     let entries: fs.Dirent[] = []
@@ -143,7 +145,8 @@ export function getFsEntry(dirPath: string): FsEntry|undefined {
             branch: isGitRepo ? readBranch(fullPath) : undefined,
             isIgnored: ignoredNames.has(e.name),
             size: stat?.size,
-            modified: stat?.mtime.toISOString()
+            modified: stat?.mtimeMs,
+            modifiedDate: stat?.mtime.toISOString()
         }
     })
     .sort((a, b) => {

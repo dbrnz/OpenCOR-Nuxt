@@ -27,7 +27,7 @@
                 <span :id="node.key" :class="{ selectable: node.leaf && node.selectable }"> {{ node.data.name }} </span>
             </template>
         </Column>
-        <Column field="modified" header="Date Modified" sortable style="width: 40%"></Column>
+        <Column field="modifiedDate" header="Date Modified" sortable style="width: 40%"></Column>
         <Column field="size" sortable style="width: 10%">
         <template #header>
             <span class="p-treetable-column-title text-right" style="width: 100%; text-align: right;">
