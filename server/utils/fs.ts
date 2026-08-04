@@ -147,7 +147,6 @@ export function getFsEntry(dirPath: string): FsEntry|undefined {
         }
     })
     .sort((a, b) => {
-        if (a.isDirectory !== b.isDirectory) return a.isDirectory ? -1 : 1
         return a.name.localeCompare(b.name)
     })
 
