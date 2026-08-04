@@ -154,6 +154,8 @@ import { provideDialogState } from './dialogs/BaseDialog.vue';
 import type SafeBlockUIWidget from './widgets/SafeBlockUIWidget.vue';
 import type MainMenu from './MainMenu.vue';
 
+import type { FsEntry } from '#server/utils/fs'
+
 const props = defineProps<IOpenCORProps>();
 
 const emit = defineEmits<IOpenCOREmits>();
@@ -1001,9 +1003,19 @@ const onOpenWorkspaceFile = async (filePath: string) => {
                   : typeof(data) === 'string'
                     ? data
                   : undefined;
-
   if (contents) {
-    openFile(contents);
+    const entry: FsEntry = await $fetch(`/api/dir/${filePath}`);
+    let fileFilePathOrFileContents: string | Uint8Array | File;
+
+    if (entry) {
+      fileFilePathOrFileContents = new File([contents], entry.name, {
+        lastModified: entry?.modified
+      })
+    } else {
+      fileFilePathOrFileContents = contents
+    }
+
+    openFile(fileFilePathOrFileContents);
   }
 };
 
