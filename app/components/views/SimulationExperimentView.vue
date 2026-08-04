@@ -794,7 +794,7 @@ const yAxisChange = (dataSize: number = 0) => {
 const modelExplorer = vue.ref<boolean>(props.file.path().startsWith('file://'));
 
 const onOpenModelExplorer = () => {
-  window.open('/ModelViewer/', '_blank');
+  window.open('/ModelExplorer/', '_blank');
 }
 
 // Interactive mode.
