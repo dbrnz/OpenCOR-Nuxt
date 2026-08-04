@@ -18,6 +18,12 @@
             :disabled="standardSimulationStatus === locSedApi.ESedInstanceStatus.IDLE"
             @click="onStop"
           />
+          <Button v-if="modelExplorer" class="p-1! toolbar-button"
+            icon="pi pi-external-link"
+            text severity="secondary"
+            title="Explore Model"
+            @click="onOpenModelExplorer"
+          />
         </div>
       </template>
       <template #center v-if="!simulationOnly">
@@ -782,6 +788,13 @@ const yAxisChange = (dataSize: number = 0) => {
     'y-axis': standardYParameter.value
   })
   updatePlot(dataSize)
+}
+
+
+const modelExplorer = vue.ref<boolean>(props.file.path().startsWith('file://'));
+
+const onOpenModelExplorer = () => {
+  window.open('/ModelViewer/', '_blank');
 }
 
 // Interactive mode.
