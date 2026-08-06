@@ -21,6 +21,7 @@ mime.define({'text/typescript': ['ts']}, true)
 // Some modelling specific mediatypes
 const extendedTypes: TypeMap[] = [
     {'application/cellml+xml': ['cellml']},
+    {'application/zip': ['omex']},
     {'image/svg+xml': ['celldl']}
 ]
 
