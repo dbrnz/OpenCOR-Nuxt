@@ -3,6 +3,7 @@
 import fs from 'node:fs'
 import type { H3Event } from 'h3'
 
+import { resolvePath } from './environment'
 import { getFsEntry } from './fs'
 
 //==============================================================================
