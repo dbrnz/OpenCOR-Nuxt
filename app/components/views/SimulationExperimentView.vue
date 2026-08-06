@@ -390,20 +390,19 @@ const onChannelBroadcastReceived = async (event: CustomEvent) => {
   if (data.type === 'request') {
     if (data.data === 'archive') {
       const omexArchiveData = standardFile.contents()
-      await broadcastChannel?.send({
+      await broadcast({
         type: 'archive',
+        path: standardFile.path(),
         data: omexArchiveData.toBase64()
       })
     }
+  } else if (data.type === 'select') {
+    if (standardParameters.value.includes(data.data)) {
+      standardYParameter.value = data.data;
+      updatePlot();
+    }
   }
-    // if 'select' message then select axis variable that has focus.
-    // if 'request-archive' and we have an omex file then send it else respond with error...
-    // message types:
-    //   `request` --> `data` response
-    //   `state` --> no response
 }
-
-
 
 vue.onBeforeUnmount(() => {
   if (broadcastChannel) {
@@ -799,9 +798,10 @@ const updatePlot = (dataSize: number = 0) => {
   };
 };
 
-const yAxisChange = (dataSize: number = 0) => {
-  broadcast({
-    'y-axis': standardYParameter.value
+const yAxisChange = async (dataSize: number = 0) => {
+  await broadcast({
+    'type': 'select',
+    'data': standardYParameter.value
   })
   updatePlot(dataSize)
 }
