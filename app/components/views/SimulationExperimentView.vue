@@ -276,13 +276,13 @@ import * as colors from '../../utils/colors';
 import * as common from '../../utils/common';
 import { MEDIUM_DELAY, VERY_SHORT_DELAY } from '../../utils/constants';
 import * as dependencies from '../../utils/dependencies';
-import * as vueCommon from '../../utils/vueCommon';
 import * as externalData from '../../utils/externalData';
 import * as locCommon from '../../utils/locCommon';
 import * as locApi from '../../libopencor/locApi';
 import * as locSedApi from '../../libopencor/locSedApi';
 import type * as locUiJsonApi from '../../libopencor/locUiJsonApi';
 import * as math from '../../utils/math';
+import * as vueCommon from '../../utils/vueCommon';
 
 import type { ISimulationExperimentViewSettings } from '../dialogs/SimulationExperimentViewSettingsDialog.vue';
 import type GraphPanelWidget from '../widgets/GraphPanelWidget.vue';
