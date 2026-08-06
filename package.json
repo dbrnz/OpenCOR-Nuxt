@@ -66,6 +66,7 @@
     "@primeuix/themes": "2.0.3",
     "@primevue/auto-import-resolver": "^5.0.0",
     "@vueuse/core": "^14.3.0",
+    "jszip": "^3.10.1",
     "mime": "^4.1.0",
     "nuxt": "^4.5.1",
     "oxigraph": "^0.5.9",

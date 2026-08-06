@@ -25,11 +25,6 @@ const externalDependencies: ExternalDependency[] = [
     set: (m) => dependencies.setJsonSchema(m)
   },
   {
-    name: 'JSZip',
-    url: 'https://cdn.jsdelivr.net/npm/jszip@3.10.1/+esm',
-    set: (m) => dependencies.setJsZip(m)
-  },
-  {
     name: 'Math.js',
     url: 'https://cdn.jsdelivr.net/npm/mathjs@15.2.0/+esm',
     set: (m) => dependencies.setMathJs(m)

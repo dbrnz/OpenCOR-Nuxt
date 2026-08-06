@@ -4,17 +4,12 @@ import xxhash from 'xxhash-wasm';
 export type Module = any;
 
 export let _jsonSchema: Module = null;
-export let _jsZip: Module = null;
 export let _mathJs: Module = null;
 export let _plotlyJs: Module = null;
 export let _xxhash: Module = null;
 
 export const setJsonSchema = (module: Module): void => {
   _jsonSchema = module;
-};
-
-export const setJsZip = (module: Module): void => {
-  _jsZip = module;
 };
 
 export const setMathJs = (module: Module): void => {

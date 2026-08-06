@@ -1,3 +1,5 @@
+import JSZip from 'jszip';
+
 import type { IOpenCORSimulationDataValue } from '../../index';
 
 import * as locApi from '../libopencor/locApi';
@@ -81,7 +83,7 @@ export const zipCellmlDataUrl = async (dataUrl: string | Uint8Array | File): Pro
     // Unzip the data.
 
     try {
-      const jsZip = new dependencies._jsZip();
+      const jsZip = new JSZip();
       const zip = await jsZip.loadAsync(zipDataUrl.data);
 
       // Make sure that the ZIP file contains only one file.

@@ -267,6 +267,8 @@ import * as vueusecore from '@vueuse/core';
 import type Popover from 'primevue/popover';
 import * as vue from 'vue';
 
+import JSZip from 'jszip';
+
 import type { IOpenCORExternalDataEvent, IOpenCORSimulationDataEvent } from '../../../index';
 
 import * as colors from '../../utils/colors';
@@ -623,7 +625,7 @@ const onDownloadCombineArchive = (): void => {
   // Create and download a COMBINE archive that contains a manifest file, a CellML file, a SED-ML file, and a UI JSON
   // file.
 
-  const jsZip = new dependencies._jsZip();
+  const jsZip = new JSZip();
   const baseFileName = common.fileName(interactiveFile.path()).replace(/\.[^/.]+$/, '');
   const modelFile = interactiveModel.file();
 
