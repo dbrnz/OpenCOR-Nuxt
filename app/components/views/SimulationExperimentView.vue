@@ -18,7 +18,7 @@
             :disabled="standardSimulationStatus === locSedApi.ESedInstanceStatus.IDLE"
             @click="onStop"
           />
-          <Button v-if="modelExplorer" class="p-1! toolbar-button"
+          <Button v-if="modelExplorerButton" class="p-1! toolbar-button"
             icon="pi pi-external-link"
             text severity="secondary"
             title="Explore Model"
@@ -271,6 +271,7 @@ import JSZip from 'jszip';
 
 import type { IOpenCORExternalDataEvent, IOpenCORSimulationDataEvent } from '../../../index';
 
+import { BROADCAST_RECEIVED_EVENT, BroadcastChannel, type BroadcastObject } from '../../utils/broadcast';
 import * as colors from '../../utils/colors';
 import * as common from '../../utils/common';
 import { MEDIUM_DELAY, VERY_SHORT_DELAY } from '../../utils/constants';
@@ -360,42 +361,55 @@ const populateParameters = (
 
 //==============================================================================
 
-let broadcastSocket = null
+// Model explorer interface
 
-vue.onMounted(() => {
-  // Derive WebSocket protocol based on environment (ws:// or wss://)
-  const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
-  broadcastSocket = new WebSocket(`${protocol}//${window.location.host}/api/broadcast`)
+const simulationUUID = self.crypto.randomUUID();
 
-  broadcastSocket.onmessage = (event) => {
-    const data = JSON.parse(event.data)
+let broadcastChannel: BroadcastChannel | undefined;
 
-// this has to be specific to the open simulation...
-// and check that it matches the simulation's id
-//
-//
+const modelExplorerButton = vue.ref<boolean>(props.file.path().endsWith('.omex'));
 
-console.log('got broadcast', data)
-
+const onOpenModelExplorer = () => {
+  if (!broadcastChannel) {
+    document.addEventListener(BROADCAST_RECEIVED_EVENT, onChannelBroadcastReceived)
+    broadcastChannel = new BroadcastChannel(simulationUUID, 'sim-expt');
   }
-})
+
+  window.open(`/ModelExplorer/${simulationUUID}`, '_blank');
+}
+
+const broadcast = async (data: BroadcastObject) => {
+  if (broadcastChannel) {
+    await broadcastChannel.send(data);
+  }
+}
+
+const onChannelBroadcastReceived = async (event: CustomEvent) => {
+  const data: BroadcastObject = event.detail
+
+  if (data.type === 'request') {
+    if (data.data === 'archive') {
+      const omexArchiveData = standardFile.contents()
+      await broadcastChannel?.send({
+        type: 'archive',
+        data: omexArchiveData.toBase64()
+      })
+    }
+  }
+    // if 'select' message then select axis variable that has focus.
+    // if 'request-archive' and we have an omex file then send it else respond with error...
+    // message types:
+    //   `request` --> `data` response
+    //   `state` --> no response
+}
+
+
 
 vue.onBeforeUnmount(() => {
-  if (broadcastSocket) {
-    broadcastSocket.close()
+  if (broadcastChannel) {
+    broadcastChannel.close();
   }
 })
-
-const broadcast = (data) => {
-// this has to be specific to the open simulation...
-//
-// add an `id` field to the message
-
-// Have an 'open viewer' button that opens a new browser window/tab with the viewer's URL,
-// passing the simulation's id as a parameter.
-
-  broadcastSocket.send(JSON.stringify(data))
-}
 
 //==============================================================================
 
@@ -790,13 +804,6 @@ const yAxisChange = (dataSize: number = 0) => {
     'y-axis': standardYParameter.value
   })
   updatePlot(dataSize)
-}
-
-
-const modelExplorer = vue.ref<boolean>(props.file.path().startsWith('file://'));
-
-const onOpenModelExplorer = () => {
-  window.open('/ModelExplorer/', '_blank');
 }
 
 // Interactive mode.
