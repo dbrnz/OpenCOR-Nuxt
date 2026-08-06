@@ -13,6 +13,8 @@ export enum OMEX_FORMAT {
     svg = 'image/svg+xml'
 }
 
+export const OMEX_BASE_URI = 'http://celldl.org/omex/'
+
 //==============================================================================
 
 export class OmexArchive {
@@ -42,10 +44,8 @@ export class OmexArchive {
                     if (this.#locationFromFormat.get(OMEX_FORMAT.manifest) === '.') {
                         const metadataLocation = this.location(OMEX_FORMAT.metadata)
                         if (metadataLocation) {
-                            const metadata = await this.getLocationData(metadataLocation)
-                           // this.#rdfStore.load(metadata, {
-                           //     format: 'text/turtle'   // Need to look at metadata string and deduce format
-                           // })
+                            const metadata = (await this.getLocationData(metadataLocation)) as string
+                            this.#rdfStore.load(OMEX_BASE_URI, metadata)
                         }
                     }
                 }
@@ -60,6 +60,27 @@ export class OmexArchive {
         return this.#formatFromLocation.get(location)
     }
 
+    async getModelImage(): Promise<string|undefined> {
+        const modelLocation = this.location(OMEX_FORMAT.cellml)
+        if (modelLocation) {
+            const result = this.#rdfStore.query(`
+                PREFIX bqmodel: <http://biomodels.net/model-qualifiers/>
+                PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+                SELECT ?image
+                WHERE {
+                    <${OMEX_BASE_URI}${modelLocation}> bqmodel:isDescribedBy ?image .
+                }
+            `)
+            if (result) {
+                const imageLocation = result[0]?.get('image')?.value.slice(OMEX_BASE_URI.length)
+                if (imageLocation && this.format(imageLocation) === OMEX_FORMAT.svg) {
+                    return await this.getLocationData(imageLocation) as Promise<string>
+                }
+            }
+        }
+    }
+
     async getLocationData(location: string, type: OutputType='string'): Promise<unknown> {
         const dataFile = this.#archive?.file(location)
         const data = dataFile?.async(type)
@@ -72,7 +93,7 @@ export class OmexArchive {
     }
 
     queryMetadata(sparql: string) {
-        //return this.#rdfStore.query(sparql)
+        return this.#rdfStore.query(sparql)
     }
 }
 

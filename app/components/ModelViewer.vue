@@ -86,10 +86,9 @@ async function onChannelBroadcastReceived(event: CustomEvent) {
         if (data.type === 'archive') {
             try {
                 const omexArchiveData = Uint8Array.fromBase64(data.data)
-
                 await omexArchive.open(omexArchiveData)
-                const cellmlLocation = omexArchive.location(OMEX_FORMAT.cellml)
-                if (cellmlLocation) {
+                const imageData = await omexArchive.getModelImage()
+                if (imageData) {
                     // query for `<cellml> bqmodel:isDescribedBy ?description`.
 
                     // Is the resulting `description` a location in the manifest with a format of `image/svg+xml`
@@ -100,7 +99,9 @@ async function onChannelBroadcastReceived(event: CustomEvent) {
                     //
                     // Open CellML as XML, get version (2 or < 2) and xpath query variable[@id] or variable[@cmeta:id]
 
+                    svgData.value = imageData
                     viewerState.value = STATE.active
+                    validModelView.value = true
                 } else {
                     throw new Error('OMEX archive has no CellML model...')
                 }
