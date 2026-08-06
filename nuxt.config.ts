@@ -91,6 +91,9 @@ export default defineNuxtConfig({
     define: {
       __LIBOPENCOR_WASM_BASE_URL__: JSON.stringify(`/${libopencorInstallPath}/${libopencorVersion}`)
     },
+    optimizeDeps: {
+      exclude: ['@celldl/viewer']
+    },
     plugins: [
       {
         // Plugin to strip unneeded PrimeIcons files.
