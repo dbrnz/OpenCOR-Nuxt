@@ -17,7 +17,7 @@ export default defineEventHandler(async (event) => {
             setResponseStatus(event, 401)
         } else if (fs.existsSync(fullPath)) {
             const fileStream = fs.createReadStream(fullPath)
-            const contentType = mediatype(fullPath)
+            const contentType = mediatype(fullPath) || 'application/octet-stream'
             if (contentType) {
                 setResponseHeader(event, 'Content-Type', contentType)
             }
