@@ -22,6 +22,7 @@ import type { Annotations, ViewerEvent } from '@celldl/viewer'
 import SvgViewer from '@celldl/viewer'
 
 import { BROADCAST_RECEIVED_EVENT, BroadcastChannel, type BroadcastObject } from '~/utils/broadcast'
+import { OMEX_FORMAT, OmexArchive } from '~/utils/omexArchive'
 
 //==============================================================================
 
@@ -40,6 +41,8 @@ enum STATE {
 }
 
 const viewerState = ref<STATE>(STATE.initialising)
+
+const omexArchive = new OmexArchive()
 
 //==============================================================================
 
@@ -80,7 +83,29 @@ async function onChannelBroadcastReceived(event: CustomEvent) {
 
     if (viewerState.value === STATE.initialising) {
         if (data.type === 'archive') {
+            try {
+                const omexArchiveData = Uint8Array.fromBase64(data.data)
 
+                await omexArchive.open(omexArchiveData)
+                const cellmlLocation = omexArchive.location(OMEX_FORMAT.cellml)
+                if (cellmlLocation) {
+                    // query for `<cellml> bqmodel:isDescribedBy ?description`.
+
+                    // Is the resulting `description` a location in the manifest with a format of `image/svg+xml`
+
+                    // if so, load SVG, get label properties for it from the store, and display with tooltips...
+
+                    // Also load cmeta:id/id <--> variable (component/name) mapping from CellML
+                    //
+                    // Open CellML as XML, get version (2 or < 2) and xpath query variable[@id] or variable[@cmeta:id]
+
+                    viewerState.value = STATE.active
+                } else {
+                    throw new Error('OMEX archive has no CellML model...')
+                }
+            } catch (error) {
+                window.alert(error)
+            }
         }
     }
 }
