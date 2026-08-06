@@ -1008,7 +1008,7 @@ const onOpenWorkspaceFile = async (filePath: string) => {
     let fileFilePathOrFileContents: string | Uint8Array | File;
 
     if (entry) {
-      fileFilePathOrFileContents = new File([contents], `file://${entry.path}`, {
+      fileFilePathOrFileContents = new File([contents], entry.name, {
         lastModified: entry?.modified
       })
     } else {
