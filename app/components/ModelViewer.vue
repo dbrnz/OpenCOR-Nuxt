@@ -3,6 +3,7 @@
         <SvgViewer v-if="validModelView"
             class="celldl-viewer"
             :annotations="annotations"
+            :options="viewerOptions"
             :svgData="svgData"
             @error="onError"
             @event="onEvent"
@@ -17,22 +18,19 @@
 
 import '@celldl/viewer/style.css'
 
-import type { Annotations, ViewerEvent } from '@celldl/viewer'
+import type { Annotations, SvgViewerOptions, ViewerEvent } from '@celldl/viewer'
 import SvgViewer from '@celldl/viewer'
 
 import { BROADCAST_RECEIVED_EVENT, BroadcastChannel, type BroadcastObject } from '~/utils/broadcast'
-import { OMEX_FORMAT, OmexArchive } from '~/utils/omexArchive'
+import { OmexArchive } from '~/utils/omexArchive'
 
 //==============================================================================
 
 const annotations = ref<Annotations>({})
-
-import { testSvg } from '~/celldl/testsvg'
-
-const svgData = ref<string>(testSvg)
+const svgData = ref<string>('')
+const viewerOptions = ref<SvgViewerOptions>({})
 
 const validModelView = ref<boolean>(false)
-
 
 enum STATE {
     active = 'Active',
@@ -52,17 +50,13 @@ const props = defineProps<{
 let broadcastChannel: BroadcastChannel | undefined;
 
 onMounted(async () => {
-    const channel = props.channel
-    if (channel?.length) {
-        document.addEventListener(BROADCAST_RECEIVED_EVENT, onChannelBroadcastReceived)
+    document.addEventListener(BROADCAST_RECEIVED_EVENT, onChannelBroadcastReceived)
 
-        broadcastChannel = new BroadcastChannel(channel[0] as string, 'model-viewer')
-        await broadcastChannel.send({
-            type: 'request',
-            data: 'archive'
-        })
-    }
-
+    broadcastChannel = new BroadcastChannel(props.channel, 'model-viewer')
+    await broadcastChannel.send({
+        type: 'request',
+        data: 'archive'
+    })
 })
 
 onBeforeUnmount(() => {
@@ -77,7 +71,24 @@ async function broadcast(data: BroadcastObject) {
     }
 }
 
+//==============================================================================
 
+const DEFAULT_MODEL_URI_PREFIX = `${window.location.protocol}//${window.location.host}/model`
+
+function makeUri(path: string|undefined): string {
+    if (path) {
+        if (path.startsWith('file://') || path.startsWith('http://') || path.startsWith('https://')) {
+            return (path.endsWith('/') || path.endsWith('#')) ? path : `${path}/`
+        } else if (path.startsWith('/')) {
+            return (path.endsWith('/') || path.endsWith('#')) ? `${DEFAULT_MODEL_URI_PREFIX}${path}` : `${DEFAULT_MODEL_URI_PREFIX}${path}/`
+        } else {
+            return (path.endsWith('/') || path.endsWith('#')) ? `${DEFAULT_MODEL_URI_PREFIX}/${path}` : `${DEFAULT_MODEL_URI_PREFIX}/${path}/`
+        }
+    }
+    return `${DEFAULT_MODEL_URI_PREFIX}/`
+}
+
+//==============================================================================
 
 async function onChannelBroadcastReceived(event: CustomEvent) {
     const data = event.detail
@@ -86,20 +97,12 @@ async function onChannelBroadcastReceived(event: CustomEvent) {
         if (data.type === 'archive') {
             try {
                 const omexArchiveData = Uint8Array.fromBase64(data.data)
-                await omexArchive.open(omexArchiveData)
-                const imageData = await omexArchive.getModelImage()
+                await omexArchive.open(makeUri(data.path), omexArchiveData)
+                const imageData = await omexArchive.getModelImageData()
                 if (imageData) {
-                    // query for `<cellml> bqmodel:isDescribedBy ?description`.
-
-                    // Is the resulting `description` a location in the manifest with a format of `image/svg+xml`
-
-                    // if so, load SVG, get label properties for it from the store, and display with tooltips...
-
-                    // Also load cmeta:id/id <--> variable (component/name) mapping from CellML
-                    //
-                    // Open CellML as XML, get version (2 or < 2) and xpath query variable[@id] or variable[@cmeta:id]
-
                     svgData.value = imageData
+                    annotations.value = omexArchive.getViewerAnnotation()
+                    viewerOptions.value.tooltip = 'label'
                     viewerState.value = STATE.active
                     validModelView.value = true
                 } else {
@@ -109,6 +112,9 @@ async function onChannelBroadcastReceived(event: CustomEvent) {
                 window.alert(error)
             }
         }
+    } else if (data.type === 'select') {
+        // select component on diagram
+        // needs property passed to viewer with ID of selected component
     }
 }
 
@@ -119,7 +125,15 @@ function onError(msg: string) {
 }
 
 function onEvent(detail: ViewerEvent) {
-    console.log(detail)
+    if (detail.type === 'select') {
+        const varName = detail.component.annotation.variable
+        if (varName) {
+            broadcast({
+                type: 'select',
+                data: varName
+            })
+        }
+    }
 }
 
 //==============================================================================

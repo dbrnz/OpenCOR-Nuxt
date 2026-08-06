@@ -4,6 +4,7 @@ export type BroadcastObject = {
     type: string
     data: string
     channel?: string
+    path?: string
     sender?: string
 }
 
