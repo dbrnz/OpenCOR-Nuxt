@@ -26,7 +26,7 @@ const emit = defineEmits<{
 
 // Passed props
 
-const fileTypes = ref<string[]>(['cellml'])
+const fileTypes = ref<string[]>(['cellml', 'omex'])
 
 //==============================================================================
 
