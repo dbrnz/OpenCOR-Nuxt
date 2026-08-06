@@ -40,7 +40,7 @@ export class BroadcastChannel {
             if (data.channel === this.#channel) {
                 document.dispatchEvent(
                     new CustomEvent(BROADCAST_RECEIVED_EVENT, {
-                        detail: { ...data, seq: this.#seq }
+                        detail: data
                     })
                 )
             }
