@@ -1,11 +1,9 @@
 import * as primeVueAutoImportResolver from '@primevue/auto-import-resolver';
 import tailwindcssPlugin from '@tailwindcss/vite';
 
-import { fileURLToPath } from 'node:url';
 import * as nodeFs from 'node:fs';
 import { visualizer as visualizerPlugin } from 'rollup-plugin-visualizer';
 import vitePlugin from 'unplugin-vue-components/vite';
-import * as vite from 'vite';
 
 import { libopencorInstallPath } from './scripts/libopencor.install';
 import { libopencorVersion } from './scripts/libopencor.version';
@@ -76,18 +74,6 @@ export default defineNuxtConfig({
     client: true,
   },
   vite: {
-    base: './',
-    build: {
-      chunkSizeWarningLimit: 2048,
-      rollupOptions: {
-        output: {
-          entryFileNames: `assets/[name].js`,
-          chunkFileNames: `assets/[name].js`,
-          assetFileNames: `assets/[name].[ext]`
-        }
-      },
-      target: 'esnext'
-    },
     define: {
       __LIBOPENCOR_WASM_BASE_URL__: JSON.stringify(`/${libopencorInstallPath}/${libopencorVersion}`)
     },
