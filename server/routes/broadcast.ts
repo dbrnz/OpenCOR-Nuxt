@@ -17,8 +17,6 @@ export default defineWebSocketHandler({
 
     message(peer: Peer, message: Message) {
         const textMessage = message.text()
-        console.debug(`[ws] Peer ${peer.id} received: ${textMessage}`)
-
         // Broadcast the message to all locally connected users
         // but not back to ourself...
         for (const localPeer of localPeers.values()) {
