@@ -16,7 +16,7 @@ on:
 
 env:
   DOCKER_NAMESPACE: dbrnz
-  DOCKER_IMAGE: model-explorer
+  DOCKER_IMAGE: model-builder
 
 jobs:
   docker:
