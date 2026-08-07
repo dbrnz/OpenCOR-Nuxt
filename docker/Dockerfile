@@ -21,4 +21,7 @@ RUN \
 WORKDIR /
 RUN rm -rf /build
 
+# Run the server when started
+ENTRYPOINT ["node", "/ModelBuilder/server/index.mjs"]
+
 ################################################################################
