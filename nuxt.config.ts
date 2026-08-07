@@ -73,6 +73,7 @@ export default defineNuxtConfig({
     server: true,
     client: true,
   },
+  telemetry: false,
   vite: {
     define: {
       __LIBOPENCOR_WASM_BASE_URL__: JSON.stringify(`/${libopencorInstallPath}/${libopencorVersion}`)
