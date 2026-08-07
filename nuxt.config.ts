@@ -11,6 +11,7 @@ import { libopencorVersion } from './scripts/libopencor.version';
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   app: {
+    baseURL: '/',
     meta: [
       { charset: "UTF-8" },
       { name: "viewport", content: "width=device-width" },
