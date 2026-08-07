@@ -1,4 +1,6 @@
 {
+  "version": "0.20260808.0",
+  "libopencorVersion": "1.20260723.2",
   "author": {
     "name": "Alan Garny",
     "email": "a.garny@auckland.ac.nz"
@@ -42,8 +44,6 @@
     },
     "./style.css": "./dist/opencor.css"
   },
-  "version": "0.20260807.0",
-  "libopencorVersion": "1.20260723.2",
   "scripts": {
     "build": "nuxt build && bun scripts/generate.version.ts",
     "clean": "bun scripts/clean.ts",
