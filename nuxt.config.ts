@@ -78,7 +78,10 @@ export default defineNuxtConfig({
       __LIBOPENCOR_WASM_BASE_URL__: JSON.stringify(`/${libopencorInstallPath}/${libopencorVersion}`)
     },
     optimizeDeps: {
-      exclude: ['@celldl/viewer']
+      exclude: [
+        '@celldl/viewer',
+        '*.wasm'
+      ]
     },
     plugins: [
       {
