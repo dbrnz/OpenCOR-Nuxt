@@ -2,7 +2,7 @@ import * as vue from 'vue';
 
 import packageJson from '../../package.json' with { type: 'json' };
 
-const { version: currentVersion } = packageJson;
+const { opencorVersion: currentVersion } = packageJson;
 
 // State to track whether an update is available and the latest version.
 
