@@ -22,6 +22,7 @@ WORKDIR /
 RUN rm -rf /build
 
 # Run the server when started
+EXPOSE 3000
 ENTRYPOINT ["node", "/ModelBuilder/server/index.mjs"]
 
 ################################################################################
