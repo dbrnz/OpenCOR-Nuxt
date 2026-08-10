@@ -66,7 +66,8 @@ export default defineNuxtConfig({
   nitro: {
     experimental: {
       websocket: true
-    }
+    },
+    preset: 'bun'
   },
 
   routeRules: {
