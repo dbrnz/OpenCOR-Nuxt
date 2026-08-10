@@ -42,26 +42,33 @@ export default defineNuxtConfig({
       },
     ],
   },
+
   compatibilityDate: '2025-07-15',
+
   components: [
     {
       path: '~/components',
       pathPrefix: false, // Disables folder name prefixing
     }
   ],
+
   devtools: { enabled: true },
+
   experimental: {
     // This allows the compiler to properly handle TypeScript types in SFCs
     typedPages: true
   },
+
   future: {
     compatibilityVersion: 4, // Ensures strict Nuxt 4 directory conventions
   },
+
   nitro: {
     experimental: {
       websocket: true
     }
   },
+
   routeRules: {
     '/**': {
       headers: {
@@ -70,11 +77,14 @@ export default defineNuxtConfig({
       }
     }
   },
+
   sourcemap: {
     server: true,
     client: true,
   },
+
   telemetry: false,
+
   vite: {
     define: {
       __LIBOPENCOR_WASM_BASE_URL__: JSON.stringify(`/${libopencorInstallPath}/${libopencorVersion}`)
