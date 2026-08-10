@@ -23,6 +23,9 @@ logs
 .env.*
 !.env.example
 
+# File is generated with our built version
+public/assets/version.json
+
 # Installed libopencor WASM files
 public/libopencor
 

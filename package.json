@@ -46,13 +46,15 @@
     "./style.css": "./dist/opencor.css"
   },
   "scripts": {
-    "build": "nuxt build && bun scripts/generate.version.ts",
-    "clean": "bun scripts/clean.ts",
+    "build": "nuxt build",
+    "clean": "bun scripts/generate.version.ts && bun scripts/clean.ts",
     "dependencies:update": "bun scripts/dependencies.update.ts",
     "dev": "nuxt dev",
     "format": "bunx --bun biome format --fix --max-diagnostics=none",
     "format:check": "bunx --bun biome format --max-diagnostics=none",
     "lint": "bunx --bun biome lint --fix --diagnostic-level=error --max-diagnostics=none && bunx stylelint '**/*.css' --fix",
+    "prebuild": "bun scripts/generate.version.ts",
+    "predev": "bun scripts/generate.version.ts",
     "start": "bun run build && nuxt preview",
     "typecheck": "bun --bun scripts/type.check.ts --noEmit",
     "version:new": "bun scripts/version.new.ts",

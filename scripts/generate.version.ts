@@ -8,11 +8,11 @@ import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const packageJsonPath = path.join(__dirname, '../package.json');
-const version = (JSON.parse(fs.readFileSync(packageJsonPath)) as { version: string }).version;
+const version = (JSON.parse(fs.readFileSync(packageJsonPath)) as { opencorVersion: string }).opencorVersion;
 
-// Make sure that the dist/assets folder exists.
+// Make sure that the public/assets folder exists.
 
-const distAssetsPath = path.join(__dirname, '../dist/assets');
+const distAssetsPath = path.join(__dirname, '../public/assets');
 
 if (!fs.existsSync(distAssetsPath)) {
   fs.mkdirSync(distAssetsPath, { recursive: true });
