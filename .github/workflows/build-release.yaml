@@ -1,0 +1,30 @@
+name: Build executables for a release
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set the timezone to New Zealand
+        uses: szenius/set-timezone@v2.0
+        with:
+          timezoneLinux: 'Pacific/Auckland'
+
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
+      - name: Install bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Build and compile to standalone executables
+        run: |
+          bun install
+          bun compile
