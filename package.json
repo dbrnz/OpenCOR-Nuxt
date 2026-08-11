@@ -46,8 +46,9 @@
     "./style.css": "./dist/opencor.css"
   },
   "scripts": {
-    "build": "nuxt build && bun run scripts/build.executables.ts",
+    "build": "nuxt build",
     "clean": "bun scripts/generate.version.ts && bun scripts/clean.ts",
+    "compile": "bun run --bun build && bun run scripts/build.executables.ts",
     "dependencies:update": "bun scripts/dependencies.update.ts",
     "dev": "nuxt dev",
     "format": "bunx --bun biome format --fix --max-diagnostics=none",
@@ -72,6 +73,7 @@
     "jszip": "^3.10.1",
     "mime": "^4.1.0",
     "nuxt": "^4.5.1",
+    "nuxt-bun-compile": "0.1.32",
     "oxigraph": "^0.5.9",
     "primeicons": "7.0.0",
     "primevue": "4.2.5",

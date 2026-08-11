@@ -2,7 +2,6 @@ import Bun from 'bun'
 import { renameSync, rmSync } from 'node:fs'
 
 const buildOptions = {
-//  bytecode: true,  // crashes on Windows
   entrypoints: ['.output/server/index.mjs'],
   minify: true
 }
