@@ -15,17 +15,26 @@ jobs:
         with:
           timezoneLinux: 'Pacific/Auckland'
 
+      - name: Install bun
+        uses: oven-sh/setup-bun@v2
+
       - name: Checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
           submodules: recursive
 
-      - name: Install bun
-        uses: oven-sh/setup-bun@v2
+      - name: Monitor Runner
+        uses: tsviz/actions-runner-telemetry@v1
 
-      - name: Build and compile to standalone executables
+      - name: Install packages
         run: |
           bun install
+
+      - name: Build application
+        run: |
           bun run -b build
+
+      - name: Compile built application to standalone executables
+        run: |
           bun run scripts/build.executables.ts

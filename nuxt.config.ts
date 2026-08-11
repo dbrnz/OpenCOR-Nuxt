@@ -67,7 +67,9 @@ export default defineNuxtConfig({
     experimental: {
       websocket: true
     },
-    preset: 'bun'
+    minify: false,
+    preset: 'bun',
+    sourcemap: false
   },
 
   routeRules: {
@@ -80,8 +82,8 @@ export default defineNuxtConfig({
   },
 
   sourcemap: {
-    server: true,
-    client: true,
+    server: false,
+    client: false,
   },
 
   telemetry: false,
