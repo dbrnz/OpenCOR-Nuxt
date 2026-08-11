@@ -11,8 +11,8 @@ const targets = [
   'bun-linux-arm64',
   'bun-linux-x64',
   'bun-windows-arm64',
-  'bun-windows-x64',
-  'bun-windows-x64-baseline',  // This is for pre-Haswell (2013) CPUs
+  'bun-windows-x64'
+//  'bun-windows-x64-baseline',  // This is for pre-Haswell (2013) CPUs
 ]
 
 // Remove any existing built distributions
