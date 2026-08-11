@@ -81,12 +81,6 @@ const items = vue.computed(() => [
           emit('openRemote');
         }
       },
-/**   {
-        label: 'Open from Workspace...',
-        command: () => {
-          emit('openWorkspace');
-        }
-      },  **/
       {
         label: 'Open Sample',
         items: [
