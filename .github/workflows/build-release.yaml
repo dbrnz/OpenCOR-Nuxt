@@ -27,4 +27,5 @@ jobs:
       - name: Build and compile to standalone executables
         run: |
           bun install
-          bun compile
+          bun run -b build
+          bun run scripts/build.executables.ts
