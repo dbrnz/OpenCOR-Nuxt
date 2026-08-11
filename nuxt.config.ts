@@ -64,10 +64,18 @@ export default defineNuxtConfig({
   },
 
   nitro: {
+    esbuild: {
+      options: {
+        target: 'esnext'
+      }
+    },
     experimental: {
       websocket: true
     },
-    preset: 'bun'
+    inlineDynamicImports: true,
+    noExternals: true,
+    preset: 'bun',
+    serveStatic: true
   },
 
   routeRules: {

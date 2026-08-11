@@ -46,7 +46,7 @@
     "./style.css": "./dist/opencor.css"
   },
   "scripts": {
-    "build": "nuxt build",
+    "build": "nuxt build && bun run scripts/build.executables.ts",
     "clean": "bun scripts/generate.version.ts && bun scripts/clean.ts",
     "dependencies:update": "bun scripts/dependencies.update.ts",
     "dev": "nuxt dev",
