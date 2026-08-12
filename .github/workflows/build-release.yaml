@@ -10,6 +10,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Set up swap space
+        uses: thejerrybao/setup-swap-space@v1
+        with:
+          swap-size-gb: 10
+
       - name: Set the timezone to New Zealand
         uses: szenius/set-timezone@v2.0
         with:
