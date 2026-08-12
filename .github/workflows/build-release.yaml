@@ -37,6 +37,8 @@ jobs:
           bun install
 
       - name: Build application
+        env:
+          NODE_OPTIONS: "--max-old-space-size=8192" # Restricts memory to 8GB
         run: |
           bun run -b build
 
